@@ -29,6 +29,7 @@
     "sweetalert2": "^11.17.2",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
+    "vue3-form-wizard": "^0.2.4",
     "vuetify": "^3.7.16"
   },
   "devDependencies": {

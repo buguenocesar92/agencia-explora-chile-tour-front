@@ -16,7 +16,8 @@ export default defineNuxtConfig({
   css: [
     /* 'vuetify/styles', */ // Agregar estilos de Vuetify
     '@mdi/font/css/materialdesignicons.css', // Agregar Material Design Icons
-    '@fortawesome/fontawesome-free/css/all.min.css'
+    '@fortawesome/fontawesome-free/css/all.min.css',
+    'vue3-form-wizard/dist/style.css',
   ],
   build: {
     transpile: ['vuetify'], // Transpilar Vuetify para que funcione correctamente con SSR
