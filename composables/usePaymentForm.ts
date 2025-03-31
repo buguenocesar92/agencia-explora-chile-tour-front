@@ -3,15 +3,17 @@ import { useNotification } from '@/composables/useNotification';
 import { useFormValidation } from '@/composables/useFormValidation';
 import type { PaymentPayload } from '@/types/PaymentType';
 import type { ReservationPayload } from '~/types/ReservationTypes';
-import { finalizeReservation } from '@/services/ReservationService';
+import { createReservation } from '@/services/ReservationService';
 
 export function usePaymentForm() {
   // Inicializamos el objeto payment. Nota: El archivo (receipt) se mantiene en memoria.
   const payment = ref<PaymentPayload>({
+    id: 0,
     amount: 0,
     payment_date: '', // Se asigna en backend
     transaction_id: '',
-    receipt: null
+    receipt: null,
+    receipt_url: ''
   });
 
   const isLoading = ref(false);
@@ -30,7 +32,28 @@ export function usePaymentForm() {
     }
   });
 
+  // Método de validación específico para el formulario de pago
+  async function validatePayment() {
+    errors.value = {};
+    
+    // Validar campos requeridos
+    if (!payment.value.receipt) {
+      errors.value.receipt = ['El comprobante de pago es requerido'];
+    }
+    
+    // Si hay errores, retornar false
+    if (Object.keys(errors.value).length > 0) {
+      return false;
+    }
+    
+    return true;
+  }
+
   async function handleSubmit() {
+    // Primero validamos
+    const isValid = await validatePayment();
+    if (!isValid) return false;
+    
     isLoading.value = true;
     errors.value = {};
     try {
@@ -71,15 +94,17 @@ export function usePaymentForm() {
       }
 
       // Enviamos toda la data al backend utilizando la función finalizeReservation
-      await finalizeReservation(formData);
+      await createReservation(formData);
       showSuccessNotification('Éxito', 'Reserva completada correctamente');
       // Limpiar localStorage o redirigir al usuario según corresponda
       localStorage.clear();
+      return true;
     } catch (error: any) {
       handleValidationError(error);
       if (errorMessage.value) {
         showErrorNotification('Error al completar la reserva', errorMessage.value);
       }
+      return false;
     } finally {
       isLoading.value = false;
     }
@@ -92,5 +117,5 @@ export function usePaymentForm() {
     }
   }
 
-  return { payment, isLoading, errors, handleSubmit, handleFileChange };
+  return { payment, isLoading, errors, handleSubmit, handleFileChange, validatePayment };
 }

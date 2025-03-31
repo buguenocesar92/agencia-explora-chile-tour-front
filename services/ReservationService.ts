@@ -11,6 +11,25 @@ export async function fetchReservations(): Promise<ReservationPayload[]> {
 export async function updateReservationStatusService(id: number, status: string): Promise<ReservationPayload> {
   const { $axios } = useNuxtApp();
   // Se asume que el endpoint PUT /reservations/{id} actualiza la reserva
-  const response = await $axios.put(`/reservations/${id}`, { status });
+  const response = await $axios.put(`/reservations/status/${id}`, { status });
   return response.data.reservation;
 }
+
+export async function createReservation(data: FormData): Promise<ReservationPayload> {
+  const { $axios } = useNuxtApp();
+  const response = await $axios.post('/reservations', data);
+  return response.data.reservation;
+}
+
+export async function fetchReservation(id: number): Promise<ReservationPayload> {
+  const { $axios } = useNuxtApp();
+  const response = await $axios.get(`/reservations/${id}`);
+  return response.data.reservation;
+}
+
+export async function updateReservation(id: number, data: ReservationPayload): Promise<ReservationPayload> {
+  const { $axios } = useNuxtApp();
+  const response = await $axios.put(`/reservations/${id}`, data);
+  return response.data.reservation;
+}
+

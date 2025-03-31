@@ -1,7 +1,14 @@
 <template>
   <AdminWrapper>
     <div class="container mx-auto p-6">
-      <h1 class="text-2xl font-bold mb-6">Lista de Reservas</h1>
+      <!-- Encabezado con botón para crear una nueva reserva -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Lista de Reservas</h1>
+        <v-btn color="primary" @click="goToCreate">
+          Nueva Reserva
+        </v-btn>
+      </div>
+
       <v-data-table
         :headers="headers"
         :items="reservations"
@@ -16,7 +23,7 @@
         </template>
         <template #item.payment="{ item }">
           <div v-if="item.payment">
-            <!-- En lugar de mostrar la imagen, mostramos un botón que abre la modal -->
+            <!-- Botón que abre la modal para mostrar el comprobante -->
             <v-btn text color="primary" @click="openModal(item.payment.receipt_url)">
               Ver Comprobante
             </v-btn>
@@ -31,7 +38,11 @@
           </v-chip>
         </template>
         <template #item.actions="{ item }">
-          <!-- Solo se muestra el botón si el status es distinto de "paid" -->
+          <!-- Botón para editar la reserva -->
+          <v-btn text color="primary" @click="goToUpdate(item.id)">
+            Editar
+          </v-btn>
+          <!-- Botón para marcar como pagado (solo si aún no lo está) -->
           <v-btn
             v-if="item.status !== 'paid'"
             color="success"
@@ -51,7 +62,12 @@
     <!-- Modal para mostrar la imagen del comprobante -->
     <v-dialog v-model="showModal" max-width="600px">
       <v-card>
-        <v-img :src="modalImageUrl" alt="Imagen del comprobante" max-height="800" contain></v-img>
+        <v-img
+          :src="modalImageUrl"
+          alt="Imagen del comprobante"
+          max-height="800"
+          contain
+        ></v-img>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="closeModal">Cerrar</v-btn>
@@ -63,6 +79,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import AdminWrapper from '@/components/AdminWrapper.vue';
 import { useReservationManager } from '@/composables/useReservationManager';
 
@@ -75,6 +92,7 @@ definePageMeta({
 
 // Extraemos la lógica del composable
 const { reservations, isLoading, loadReservations, updateReservationStatus } = useReservationManager();
+const router = useRouter();
 
 onMounted(() => {
   loadReservations();
@@ -106,5 +124,14 @@ function openModal(url: string) {
 
 function closeModal() {
   showModal.value = false;
+}
+
+// Funciones para navegación a crear y editar reservas
+function goToCreate() {
+  router.push('/reservas/crear');
+}
+
+function goToUpdate(id: number) {
+  router.push(`/reservas/editar/${id}`);
 }
 </script>
