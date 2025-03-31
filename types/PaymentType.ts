@@ -3,5 +3,6 @@ export interface PaymentPayload {
     payment_date: string;
     transaction_id: string;
     receipt: File | null;
+    receipt_url: string | null;
   }
   

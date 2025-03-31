@@ -2,8 +2,8 @@ import { ref, onMounted } from 'vue';
 import { useNotification } from '@/composables/useNotification';
 import { useFormValidation } from '@/composables/useFormValidation';
 import type { PaymentPayload } from '@/types/PaymentType';
-import type { ReservationPayload } from '@/types/ReservationType';
-import { finalizeReservation } from '@/services/reservationService';
+import type { ReservationPayload } from '~/types/ReservationTypes';
+import { finalizeReservation } from '@/services/ReservationService';
 
 export function usePaymentForm() {
   // Inicializamos el objeto payment. Nota: El archivo (receipt) se mantiene en memoria.

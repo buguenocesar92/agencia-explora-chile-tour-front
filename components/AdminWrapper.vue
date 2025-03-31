@@ -8,7 +8,7 @@
       </div>
       <FooterAdmin />
       <!-- Componente global de notificaciones en tiempo real -->
-      <RealTimeNotifications />
+      <!-- <RealTimeNotifications /> -->
     </div>
   </div>  
 </template>
@@ -17,5 +17,5 @@
 import Sidebar from '@/components/Sidebar/Sidebar.vue';
 import AdminNavbar from '@/components/Navbars/AdminNavbar.vue';
 import FooterAdmin from "@/components/Footers/FooterAdmin.vue";
-import RealTimeNotifications from '@/components/RealTimeNotifications.vue';
+/* import RealTimeNotifications from '@/components/RealTimeNotifications.vue'; */
 </script>
