@@ -4,6 +4,7 @@ import { useFormValidation } from '@/composables/useFormValidation';
 import type { PaymentPayload } from '@/types/PaymentType';
 import type { ReservationPayload } from '~/types/ReservationTypes';
 import { createReservation } from '@/services/ReservationService';
+import { useRouter } from 'vue-router';
 
 export function usePaymentForm() {
   // Inicializamos el objeto payment. Nota: El archivo (receipt) se mantiene en memoria.
@@ -16,6 +17,7 @@ export function usePaymentForm() {
     receipt_url: ''
   });
 
+  const router = useRouter();
   const isLoading = ref(false);
   const errors = ref<{ [key: string]: string[] }>({});
 
@@ -98,6 +100,9 @@ export function usePaymentForm() {
       showSuccessNotification('Éxito', 'Reserva completada correctamente');
       // Limpiar localStorage o redirigir al usuario según corresponda
       localStorage.clear();
+      // Redirigir al usuario a la página de inicio o a otra página relevante
+      router.push('/'); // Cambia '/home' a la ruta deseada
+      
       return true;
     } catch (error: any) {
       handleValidationError(error);

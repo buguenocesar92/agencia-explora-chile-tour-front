@@ -22,7 +22,7 @@ import { ref } from 'vue';
 import FormInput from "@/components/FormInput.vue";
 import { usePaymentForm } from '@/composables/usePaymentForm';
 
-const { payment, isLoading, errors, handleSubmit, handleFileChange, validatePayment } = usePaymentForm();
+const { payment, errors, handleSubmit, handleFileChange, validatePayment } = usePaymentForm();
 const form = ref(null);
 
 // Método de validación que será llamado desde el componente padre
