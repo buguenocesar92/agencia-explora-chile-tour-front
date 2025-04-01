@@ -128,7 +128,7 @@
 
 <script setup lang="ts">
 import AdminWrapper from '@/components/AdminWrapper.vue';
-import { useReservationForm } from '@/composables/useReservationForm';
+import { useReservationForm } from '~/composables/Reservation/useReservationForm';
 import { useTripForm } from '@/composables/useTripForm';
 
 definePageMeta({

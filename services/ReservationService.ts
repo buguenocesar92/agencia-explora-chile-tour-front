@@ -33,3 +33,7 @@ export async function updateReservation(id: number, data: ReservationPayload): P
   return response.data.reservation;
 }
 
+export async function deleteReservation(id: number): Promise<void> {
+  const { $axios } = useNuxtApp();
+  await $axios.delete(`/reservations/${id}`);
+}

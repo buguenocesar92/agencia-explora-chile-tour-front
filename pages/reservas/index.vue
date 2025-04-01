@@ -24,7 +24,7 @@
         <template #item.payment="{ item }">
           <div v-if="item.payment">
             <!-- Botón que abre la modal para mostrar el comprobante -->
-            <v-btn text color="primary" @click="openModal(item.payment.receipt_url)">
+            <v-btn text color="primary" @click="openModal(item.payment.receipt_url || '')">
               Ver Comprobante
             </v-btn>
           </div>
@@ -38,10 +38,7 @@
           </v-chip>
         </template>
         <template #item.actions="{ item }">
-          <!-- Botón para editar la reserva -->
-          <v-btn text color="primary" @click="goToUpdate(item.id)">
-            Editar
-          </v-btn>
+
           <!-- Botón para marcar como pagado (solo si aún no lo está) -->
           <v-btn
             v-if="item.status !== 'paid'"
@@ -49,6 +46,14 @@
             @click="markAsPaid(item.id)"
           >
             Marcar como Pagado
+          </v-btn>
+          <!-- Botón para editar la reserva -->
+          <v-btn text color="primary" @click="goToUpdate(item.id)">
+            Editar
+          </v-btn>
+          <v-btn color="error" @click="handleDelete(item.id)">
+              <v-icon start>mdi-delete</v-icon>
+              Eliminar
           </v-btn>
         </template>
         <template #no-data>
@@ -81,7 +86,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import AdminWrapper from '@/components/AdminWrapper.vue';
-import { useReservationManager } from '@/composables/useReservationManager';
+import { useReservationManager } from '@/composables/Reservation/useReservationManager';
 
 definePageMeta({
   requiresAuth: true,
@@ -91,7 +96,7 @@ definePageMeta({
 });
 
 // Extraemos la lógica del composable
-const { reservations, isLoading, loadReservations, updateReservationStatus } = useReservationManager();
+const { reservations, isLoading, loadReservations, updateReservationStatus, handleDelete } = useReservationManager();
 const router = useRouter();
 
 onMounted(() => {
@@ -134,4 +139,5 @@ function goToCreate() {
 function goToUpdate(id: number) {
   router.push(`/reservas/editar/${id}`);
 }
+
 </script>

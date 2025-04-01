@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { useReservationManager } from '@/composables/useReservationManager'
+import { useReservationManager } from '~/composables/Reservation/useReservationManager'
 
 // Extraemos las opciones del calendario y el estado del modal desde el composable
 const { calendarOptions, showModal, selectedReservation } = useReservationManager()

@@ -2,7 +2,7 @@
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import AdminWrapper from '@/components/AdminWrapper.vue';
-import { useReservationForm } from '~/composables/useReservationForm';
+import { useReservationForm } from '~/composables/Reservation/useReservationForm';
 
 definePageMeta({
   requiresAuth: true,
