@@ -1,25 +1,3 @@
-<script setup lang="ts">
-import { onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import AdminWrapper from '@/components/AdminWrapper.vue';
-import { useReservationForm } from '~/composables/Reservation/useReservationForm';
-
-definePageMeta({
-  requiresAuth: true,
-});
-
-const { reservation, isEditing, isLoading, errors, handleSubmit, loadReservation } = useReservationForm();
-const route = useRoute();
-
-onMounted(() => {
-  const reservationId = Number(route.params.id);
-  if (reservationId) {
-    isEditing.value = true;
-    loadReservation(reservationId);
-  }
-});
-</script>
-
 <template>
   <AdminWrapper>
     <div class="container mx-auto p-6 max-w-md">
@@ -128,3 +106,25 @@ onMounted(() => {
     </div>
   </AdminWrapper>
 </template>
+
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import AdminWrapper from '@/components/AdminWrapper.vue';
+import { useReservationForm } from '~/composables/Reservation/useReservationForm';
+
+definePageMeta({
+  requiresAuth: true,
+});
+
+const { reservation, isEditing, isLoading, errors, handleSubmit, loadReservation } = useReservationForm();
+const route = useRoute();
+
+onMounted(() => {
+  const reservationId = Number(route.params.id);
+  if (reservationId) {
+    isEditing.value = true;
+    loadReservation(reservationId);
+  }
+});
+</script>

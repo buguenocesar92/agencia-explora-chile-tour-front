@@ -96,7 +96,6 @@ import ReservationFormPayment from '@/components/Reserva/ReservationFormPayment.
 import { useClientForm } from '@/composables/useClientForm';
 import { useTripForm } from '@/composables/useTripForm';
 import { usePaymentForm } from '@/composables/usePaymentForm';
-import { useRouter } from 'vue-router';
 
 const currentStep = ref(1);
 

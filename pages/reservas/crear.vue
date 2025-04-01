@@ -113,6 +113,25 @@
             </select>
             <p v-if="errors.tripOption" class="text-red-500 text-sm mt-1">{{ errors.tripOption[0] }}</p>
         </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Comprobante de Pago (Imagen)</label>
+          <input
+            type="file"
+            accept="image/*"
+            @change="handleFileChange"
+            class="w-full"
+          />
+          <!-- Vista previa del comprobante -->
+          <img
+            v-if="previewUrl"
+            :src="previewUrl"
+            alt="Vista previa del comprobante"
+            class="mt-2 max-h-40 object-contain"
+          />
+          <p v-if="errors['payment.receipt']" class="text-red-500 text-sm mt-1">
+            {{ errors['payment.receipt'][0] }}
+          </p>
+        </div>
 
         <button
           type="submit"
@@ -127,17 +146,16 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import AdminWrapper from '@/components/AdminWrapper.vue';
 import { useReservationForm } from '~/composables/Reservation/useReservationForm';
-import { useTripForm } from '@/composables/useTripForm';
 
 definePageMeta({
   requiresAuth: true,
 });
 
-// Usamos el composable para el formulario de reserva
-const { reservation, isEditing, isLoading, errors, handleSubmit, loadReservation } = useReservationForm();
-const { trip } = useTripForm();
+const previewUrl = ref('');
+const { reservation, isEditing, isLoading, errors, handleSubmit } = useReservationForm();
 
 const tripOptions = ref([
   { id: 1, departure: '2025-04-01', return: '2025-04-10' },
@@ -152,11 +170,24 @@ const selectedTripId = ref('');
 function onTripChange() {
   const selected = tripOptions.value.find(option => option.id === parseInt(selectedTripId.value));
   if (selected) {
-    trip.value.departure_date = selected.departure;
-    trip.value.return_date = selected.return;
+    // Actualiza los datos del viaje en el objeto reservation
+    reservation.value.trip.departure_date = selected.departure;
+    reservation.value.trip.return_date = selected.return;
   } else {
-    trip.value.departure_date = '';
-    trip.value.return_date = '';
+    reservation.value.trip.departure_date = '';
+    reservation.value.trip.return_date = '';
+  }
+}
+
+
+function handleFileChange(event: Event) {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files[0]) {
+    const file = target.files[0];
+    // Actualiza el comprobante en el objeto payment de la reserva
+    reservation.value.payment.receipt = file;
+    // Genera la URL para vista previa
+    previewUrl.value = URL.createObjectURL(file);
   }
 }
 </script>
