@@ -7,7 +7,6 @@ import { useFormValidation } from '@/composables/useFormValidation';
 import type { ReservationPayload } from '@/types/ReservationTypes';
 
 export function useReservationForm() {
-  // Estado inicial de la reserva (estructura anidada)
   const reservation = ref<ReservationPayload>({
     id: 0,
     client: { id: 0, name: '', email: '', rut: '', date_of_birth: '', nationality: '', phone: '' },
@@ -21,7 +20,6 @@ export function useReservationForm() {
   const isLoading = ref(false);
   const errors = ref<{ [key: string]: string[] }>({});
   const router = useRouter();
-
   const { showSuccessNotification, showErrorNotification } = useNotification();
   const { errorMessage, handleValidationError } = useFormValidation();
 
@@ -46,21 +44,18 @@ export function useReservationForm() {
     errors.value = {};
     try {
       if (isEditing.value) {
-        console.log('Updating reservation with data:', reservation.value);
         const formData = toFormData(reservation.value);
-        // Para PUT con FormData, incluimos _method override
+        // Agregamos _method override para enviar como POST
         formData.append('_method', 'PUT');
         await updateReservation(reservation.value.id, formData);
         showSuccessNotification('Éxito', 'Reserva actualizada correctamente');
       } else {
-        console.log('Creating reservation with data:', reservation.value);
         const formData = toFormData(reservation.value);
         await createReservation(formData);
         showSuccessNotification('Éxito', 'Reserva creada correctamente');
       }
       router.push('/reservas');
     } catch (error) {
-      console.error('Error al guardar la reserva:', error);
       handleValidationError(error);
       if (errorMessage.value) {
         showErrorNotification('Error al guardar la reserva', errorMessage.value);
@@ -72,7 +67,6 @@ export function useReservationForm() {
 
   function toFormData(data: ReservationPayload): FormData {
     const formData = new FormData();
-    // Cliente
     formData.append('client[id]', data.client?.id?.toString() || '0');
     formData.append('client[name]', data.client?.name || '');
     formData.append('client[email]', data.client?.email || '');
@@ -80,28 +74,24 @@ export function useReservationForm() {
     formData.append('client[date_of_birth]', data.client?.date_of_birth || '');
     formData.append('client[nationality]', data.client?.nationality || '');
     formData.append('client[phone]', data.client?.phone || '');
-    // Viaje
     formData.append('trip[id]', data.trip?.id?.toString() || '0');
     formData.append('trip[destination]', data.trip?.destination || '');
     formData.append('trip[departure_date]', data.trip?.departure_date || '');
     formData.append('trip[return_date]', data.trip?.return_date || '');
     formData.append('trip[service_type]', data.trip?.service_type || '');
-    // Pago
     formData.append('payment[id]', data.payment?.id?.toString() || '0');
     formData.append('payment[amount]', data.payment?.amount?.toString() || '0');
     formData.append('payment[payment_date]', data.payment?.payment_date || '');
     formData.append('payment[transaction_id]', data.payment?.transaction_id || '');
-    // Solo agregamos el comprobante si es un archivo (File), no si es un string
     if (data.payment?.receipt && data.payment.receipt instanceof File) {
       formData.append('payment[receipt]', data.payment.receipt);
     }
-    // Otros campos
     formData.append('status', data.status || '');
     formData.append('date', data.date || '');
     formData.append('description', data.description || '');
     return formData;
   }
-  
+
   function handleFileChange(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files[0]) {
