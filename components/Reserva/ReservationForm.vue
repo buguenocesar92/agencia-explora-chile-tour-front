@@ -1,110 +1,70 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-4">
     <!-- Sección de Cliente -->
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2">Nombre del Cliente</label>
-      <input
-        v-model="localReservation.client.name"
-        type="text"
-        class="w-full px-3 py-2 border rounded"
-        :class="{ 'border-red-500': errors['client.name'] }"
-      />
-      <p v-if="errors['client.name']" class="text-red-500 text-sm mt-1">
-        {{ errors['client.name'][0] }}
-      </p>
-    </div>
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2">Email del Cliente</label>
-      <input
-        v-model="localReservation.client.email"
-        type="email"
-        class="w-full px-3 py-2 border rounded"
-        :class="{ 'border-red-500': errors['client.email'] }"
-      />
-      <p v-if="errors['client.email']" class="text-red-500 text-sm mt-1">
-        {{ errors['client.email'][0] }}
-      </p>
-    </div>
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2">RUT del Cliente</label>
-      <input
-        v-model="localReservation.client.rut"
-        type="text"
-        class="w-full px-3 py-2 border rounded"
-        :class="{ 'border-red-500': errors['client.rut'] }"
-      />
-      <p v-if="errors['client.rut']" class="text-red-500 text-sm mt-1">
-        {{ errors['client.rut'][0] }}
-      </p>
-    </div>
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2">Fecha de Nacimiento</label>
-      <input
-        v-model="localReservation.client.date_of_birth"
-        type="date"
-        class="w-full px-3 py-2 border rounded"
-        :class="{ 'border-red-500': errors['client.date_of_birth'] }"
-      />
-      <p v-if="errors['client.date_of_birth']" class="text-red-500 text-sm mt-1">
-        {{ errors['client.date_of_birth'][0] }}
-      </p>
-    </div>
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2">Nacionalidad</label>
-      <input
-        v-model="localReservation.client.nationality"
-        type="text"
-        class="w-full px-3 py-2 border rounded"
-        :class="{ 'border-red-500': errors['client.nationality'] }"
-      />
-      <p v-if="errors['client.nationality']" class="text-red-500 text-sm mt-1">
-        {{ errors['client.nationality'][0] }}
-      </p>
-    </div>
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2">Teléfono</label>
-      <input
-        v-model="localReservation.client.phone"
-        type="text"
-        class="w-full px-3 py-2 border rounded"
-        :class="{ 'border-red-500': errors['client.phone'] }"
-      />
-      <p v-if="errors['client.phone']" class="text-red-500 text-sm mt-1">
-        {{ errors['client.phone'][0] }}
-      </p>
-    </div>
+    <FormInput
+      id="client-name"
+      label="Nombre del Cliente"
+      v-model="localReservation.client.name"
+      :error="errors['client.name'] ? errors['client.name'][0] : ''"
+      required
+    />
+    <FormInput
+      id="client-email"
+      label="Email del Cliente"
+      type="email"
+      v-model="localReservation.client.email"
+      :error="errors['client.email'] ? errors['client.email'][0] : ''"
+      required
+    />
+    <FormInput
+      id="client-rut"
+      label="RUT del Cliente"
+      v-model="localReservation.client.rut"
+      :error="errors['client.rut'] ? errors['client.rut'][0] : ''"
+      required
+    />
+    <FormInput
+      id="client-dob"
+      label="Fecha de Nacimiento"
+      type="date"
+      v-model="localReservation.client.date_of_birth"
+      :error="errors['client.date_of_birth'] ? errors['client.date_of_birth'][0] : ''"
+      required
+    />
+    <FormInput
+      id="client-nationality"
+      label="Nacionalidad"
+      v-model="localReservation.client.nationality"
+      :error="errors['client.nationality'] ? errors['client.nationality'][0] : ''"
+      required
+    />
+    <FormInput
+      id="client-phone"
+      label="Teléfono"
+      v-model="localReservation.client.phone"
+      :error="errors['client.phone'] ? errors['client.phone'][0] : ''"
+      required
+    />
 
     <!-- Sección de Viaje -->
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2">Destino del Viaje</label>
-      <input
-        v-model="localReservation.trip.destination"
-        type="text"
-        class="w-full px-3 py-2 border rounded"
-        :class="{ 'border-red-500': errors['trip.destination'] }"
-      />
-      <p v-if="errors['trip.destination']" class="text-red-500 text-sm mt-1">
-        {{ errors['trip.destination'][0] }}
-      </p>
-    </div>
-    <div class="mb-4">
-      <label for="tripOption" class="block text-gray-700 mb-2">Selecciona un viaje</label>
-      <select
-        id="tripOption"
-        v-model="selectedTripId"
-        @change="onTripChange"
-        class="w-full px-3 py-2 border rounded"
-        :class="{ 'border-red-500': errors.tripOption }"
-      >
-        <option value="">Seleccione una opción</option>
-        <option v-for="option in tripOptions" :key="option.id" :value="option.id">
-          {{ option.departure }} - {{ option.return }}
-        </option>
-      </select>
-      <p v-if="errors.tripOption" class="text-red-500 text-sm mt-1">
-        {{ errors.tripOption[0] }}
-      </p>
-    </div>
+    <FormInput
+      id="trip-destination"
+      label="Destino del Viaje"
+      v-model="localReservation.trip.destination"
+      :error="errors['trip.destination'] ? errors['trip.destination'][0] : ''"
+      required
+    />
+    <FormSelect
+      id="trip-option"
+      label="Selecciona un viaje"
+      :options="tripOptionsSelect"
+      v-model="selectedTripId"
+      :error="errors.tripOption ? errors.tripOption[0] : ''"
+      required
+      placeholder="Seleccione una opción"
+      :placeholderValue="''"
+      @change="onTripChange"
+    />
 
     <!-- Sección de Pago: Comprobante de Pago -->
     <div class="mb-4">
@@ -116,11 +76,12 @@
           class="mb-2 max-h-40 object-contain"
         />
       </div>
-      <input
+      <FormInput
+        id="payment-receipt"
+        label=""
         type="file"
-        accept="image/*"
-        @change="handleFileChangeWithPreview"
-        class="w-full"
+        v-model="paymentFile"
+        :error="errors['payment.receipt'] ? errors['payment.receipt'][0] : ''"
       />
       <div v-if="previewUrl">
         <p class="text-gray-700 mt-1">Nueva imagen seleccionada:</p>
@@ -130,9 +91,6 @@
           class="mt-2 max-h-40 object-contain"
         />
       </div>
-      <p v-if="errors['payment.receipt']" class="text-red-500 text-sm mt-1">
-        {{ errors['payment.receipt'][0] }}
-      </p>
     </div>
 
     <!-- Botón de envío -->
@@ -149,6 +107,8 @@
 <script setup lang="ts">
 import { ref, watch, toRefs } from 'vue';
 import type { ReservationPayload } from '@/types/ReservationTypes';
+import FormInput from '@/components/FormInput.vue';
+import FormSelect from '@/components/FormSelect.vue';
 
 const props = defineProps<{
   modelValue: ReservationPayload;
@@ -162,21 +122,23 @@ const emit = defineEmits<{
   (e: 'update:modelValue', data: ReservationPayload): void;
 }>();
 
-// Copia local para modificar sin afectar la prop directamente
+// Crear una copia local para editar sin modificar directamente la prop
 const localReservation = ref<ReservationPayload>({ ...props.modelValue });
 const { isEditing, isLoading, errors } = toRefs(props);
 
+// Para el manejo de la imagen del comprobante
+const paymentFile = ref<File | null>(null);
 const previewUrl = ref('');
-const selectedTripId = ref('');
 
-// Opciones para seleccionar un viaje (pueden provenir de una API o ser estáticas)
-const tripOptions = ref([
-  { id: 1, departure: '2025-04-01', return: '2025-04-10' },
-  { id: 2, departure: '2025-05-01', return: '2025-05-10' },
-  { id: 3, departure: '2025-06-01', return: '2025-06-10' },
+// Para el select del viaje
+const selectedTripId = ref('');
+const tripOptionsSelect = ref([
+  { id: 1, name: '2025-04-01 - 2025-04-10' },
+  { id: 2, name: '2025-05-01 - 2025-05-10' },
+  { id: 3, name: '2025-06-01 - 2025-06-10' },
 ]);
 
-// Sincroniza la copia local cuando modelValue cambie
+// Sincronizar localReservation cuando modelValue cambie
 watch(() => props.modelValue, (newVal) => {
   localReservation.value = { ...newVal };
 });
@@ -187,7 +149,6 @@ watch(
   (newTripId) => {
     if (newTripId) {
       selectedTripId.value = newTripId.toString();
-      console.log('selectedTripId.value', selectedTripId.value);
     } else {
       selectedTripId.value = '';
     }
@@ -195,13 +156,15 @@ watch(
   { immediate: true }
 );
 
+// Manejar el cambio del select de viaje
 function onTripChange() {
-  const selected = tripOptions.value.find(
+  const selected = tripOptionsSelect.value.find(
     option => option.id === parseInt(selectedTripId.value)
   );
   if (selected) {
-    localReservation.value.trip.departure_date = selected.departure;
-    localReservation.value.trip.return_date = selected.return;
+    const [departure, returnDate] = selected.name.split(' - ');
+    localReservation.value.trip.departure_date = departure;
+    localReservation.value.trip.return_date = returnDate;
   } else {
     localReservation.value.trip.departure_date = '';
     localReservation.value.trip.return_date = '';
@@ -209,12 +172,20 @@ function onTripChange() {
   emit('update:modelValue', localReservation.value);
 }
 
+// Manejar el cambio del input file (a través de FormInput)
+watch(paymentFile, (newFile) => {
+  if (newFile) {
+    localReservation.value.payment.receipt = newFile;
+    previewUrl.value = URL.createObjectURL(newFile);
+    emit('update:modelValue', localReservation.value);
+  }
+});
+
+// Función para manejar el cambio del archivo en el componente FormInput (tipo file)
 function handleFileChangeWithPreview(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
-    localReservation.value.payment.receipt = target.files[0];
-    previewUrl.value = URL.createObjectURL(target.files[0]);
-    emit('update:modelValue', localReservation.value);
+    paymentFile.value = target.files[0];
   }
 }
 
