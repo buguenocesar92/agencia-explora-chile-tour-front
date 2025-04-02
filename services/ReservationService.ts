@@ -27,9 +27,9 @@ export async function fetchReservation(id: number): Promise<ReservationPayload> 
   return response.data.reservation;
 }
 
-export async function updateReservation(id: number, data: ReservationPayload): Promise<ReservationPayload> {
+export async function updateReservation(id: number, data: FormData): Promise<ReservationPayload> {
   const { $axios } = useNuxtApp();
-  const response = await $axios.put(`/reservations/${id}`, data);
+  const response = await $axios.post(`/reservations/${id}`, data);
   return response.data.reservation;
 }
 

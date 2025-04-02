@@ -113,21 +113,33 @@
             </select>
             <p v-if="errors.tripOption" class="text-red-500 text-sm mt-1">{{ errors.tripOption[0] }}</p>
         </div>
+        <!-- Sección de Pago: Comprobante de Pago -->
         <div class="mb-4">
           <label class="block text-gray-700 mb-2">Comprobante de Pago (Imagen)</label>
+          <!-- Mostrar comprobante actual si existe -->
+          <div v-if="reservation.payment.receipt_url">
+            <img
+              :src="reservation.payment.receipt_url"
+              alt="Comprobante de Pago"
+              class="mb-2 max-h-40 object-contain"
+            />
+          </div>
+          <!-- Input para actualizar comprobante -->
           <input
             type="file"
             accept="image/*"
-            @change="handleFileChange"
+            @change="handleFileChangeWithPreview"
             class="w-full"
           />
-          <!-- Vista previa del comprobante -->
-          <img
-            v-if="previewUrl"
-            :src="previewUrl"
-            alt="Vista previa del comprobante"
-            class="mt-2 max-h-40 object-contain"
-          />
+          <!-- Vista previa de la nueva imagen -->
+          <div v-if="newPreviewUrl">
+            <p class="text-gray-700 mt-1">Nueva imagen seleccionada:</p>
+            <img
+              :src="newPreviewUrl"
+              alt="Nueva vista previa"
+              class="mt-2 max-h-40 object-contain"
+            />
+          </div>
           <p v-if="errors['payment.receipt']" class="text-red-500 text-sm mt-1">
             {{ errors['payment.receipt'][0] }}
           </p>
@@ -154,8 +166,7 @@ definePageMeta({
   requiresAuth: true,
 });
 
-const previewUrl = ref('');
-const { reservation, isEditing, isLoading, errors, handleSubmit } = useReservationForm();
+const { reservation, isEditing, isLoading, errors, handleSubmit, handleFileChange } = useReservationForm();
 
 const tripOptions = ref([
   { id: 1, departure: '2025-04-01', return: '2025-04-10' },
@@ -165,6 +176,7 @@ const tripOptions = ref([
 
 // Id seleccionado de la opción de viaje (para el select)
 const selectedTripId = ref('');
+const newPreviewUrl = ref('');
 
 // Actualiza las fechas en el objeto 'trip' según la opción seleccionada
 function onTripChange() {
@@ -179,15 +191,12 @@ function onTripChange() {
   }
 }
 
-
-function handleFileChange(event: Event) {
+function handleFileChangeWithPreview(event: Event) {
+  handleFileChange(event);
   const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
-    const file = target.files[0];
-    // Actualiza el comprobante en el objeto payment de la reserva
-    reservation.value.payment.receipt = file;
-    // Genera la URL para vista previa
-    previewUrl.value = URL.createObjectURL(file);
+    newPreviewUrl.value = URL.createObjectURL(target.files[0]);
   }
 }
+
 </script>
