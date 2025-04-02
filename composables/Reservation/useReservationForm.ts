@@ -48,7 +48,7 @@ export function useReservationForm() {
       if (isEditing.value) {
         console.log('Updating reservation with data:', reservation.value);
         const formData = toFormData(reservation.value);
-        // Para PUT con FormData, añadimos _method
+        // Para PUT con FormData, incluimos _method override
         formData.append('_method', 'PUT');
         await updateReservation(reservation.value.id, formData);
         showSuccessNotification('Éxito', 'Reserva actualizada correctamente');
@@ -91,7 +91,8 @@ export function useReservationForm() {
     formData.append('payment[amount]', data.payment?.amount?.toString() || '0');
     formData.append('payment[payment_date]', data.payment?.payment_date || '');
     formData.append('payment[transaction_id]', data.payment?.transaction_id || '');
-    if (data.payment?.receipt) {
+    // Solo agregamos el comprobante si es un archivo (File), no si es un string
+    if (data.payment?.receipt && data.payment.receipt instanceof File) {
       formData.append('payment[receipt]', data.payment.receipt);
     }
     // Otros campos
