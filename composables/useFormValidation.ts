@@ -23,8 +23,10 @@ export function useFormValidation() {
 
     const { response } = error as AxiosError<ValidationErrorResponse>;
     if (response?.status === 422) {
-      // Manejar errores de validación
-      errors.value = response.data.errors as { [key: string]: string[] };
+      // Si existen errores en la respuesta, asignarlos al objeto errors
+      if ((error as any).response && (error as any).response.data && (error as any).response.data.errors) {
+        errors.value = (error as any).response.data.errors;
+      }
       errorMessage.value = response.data.message || 'Validation error occurred.';
 
       const errorDetails = Object.entries(errors.value)

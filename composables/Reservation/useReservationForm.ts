@@ -7,6 +7,7 @@ import { useFormValidation } from '@/composables/useFormValidation';
 import type { ReservationPayload } from '@/types/ReservationTypes';
 
 export function useReservationForm() {
+  // Estado inicial de la reserva con la estructura anidada
   const reservation = ref<ReservationPayload>({
     id: 0,
     client: { id: 0, name: '', email: '', rut: '', date_of_birth: '', nationality: '', phone: '' },
@@ -18,10 +19,11 @@ export function useReservationForm() {
   });
   const isEditing = ref(false);
   const isLoading = ref(false);
-  const errors = ref<{ [key: string]: string[] }>({});
   const router = useRouter();
+
   const { showSuccessNotification, showErrorNotification } = useNotification();
-  const { errorMessage, handleValidationError } = useFormValidation();
+  // En lugar de crear un nuevo errors, usamos el errors del composable de validación
+  const { errors, errorMessage, handleValidationError } = useFormValidation();
 
   async function loadReservation(id: number) {
     isLoading.value = true;
@@ -41,10 +43,13 @@ export function useReservationForm() {
 
   async function handleSubmit() {
     isLoading.value = true;
+    // Limpiamos los errores antes de enviar
+    // (El errors usado es el de useFormValidation)
     errors.value = {};
     try {
       if (isEditing.value) {
         const formData = toFormData(reservation.value);
+        // Para PUT con FormData, añadimos _method override
         formData.append('_method', 'PUT');
         await updateReservation(reservation.value.id, formData);
         showSuccessNotification('Éxito', 'Reserva actualizada correctamente');
@@ -55,13 +60,7 @@ export function useReservationForm() {
       }
       router.push('/reservas');
     } catch (error) {
-      
       handleValidationError(error);
-      if ((error as any).response && (error as any).response.data && (error as any).response.data.errors) {
-        if ((error as any).response?.data?.errors) {
-          errors.value = (error as any).response.data.errors;
-        }
-      }
       if (errorMessage.value) {
         showErrorNotification('Error al guardar la reserva', errorMessage.value);
       }
@@ -72,6 +71,7 @@ export function useReservationForm() {
 
   function toFormData(data: ReservationPayload): FormData {
     const formData = new FormData();
+    // Cliente
     formData.append('client[id]', data.client?.id?.toString() || '0');
     formData.append('client[name]', data.client?.name || '');
     formData.append('client[email]', data.client?.email || '');
@@ -79,11 +79,13 @@ export function useReservationForm() {
     formData.append('client[date_of_birth]', data.client?.date_of_birth || '');
     formData.append('client[nationality]', data.client?.nationality || '');
     formData.append('client[phone]', data.client?.phone || '');
+    // Viaje
     formData.append('trip[id]', data.trip?.id?.toString() || '0');
     formData.append('trip[destination]', data.trip?.destination || '');
     formData.append('trip[departure_date]', data.trip?.departure_date || '');
     formData.append('trip[return_date]', data.trip?.return_date || '');
     formData.append('trip[service_type]', data.trip?.service_type || '');
+    // Pago
     formData.append('payment[id]', data.payment?.id?.toString() || '0');
     formData.append('payment[amount]', data.payment?.amount?.toString() || '0');
     formData.append('payment[payment_date]', data.payment?.payment_date || '');
@@ -91,12 +93,13 @@ export function useReservationForm() {
     if (data.payment?.receipt && data.payment.receipt instanceof File) {
       formData.append('payment[receipt]', data.payment.receipt);
     }
+    // Otros campos
     formData.append('status', data.status || '');
     formData.append('date', data.date || '');
     formData.append('description', data.description || '');
     return formData;
   }
-
+  
   function handleFileChange(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files[0]) {
