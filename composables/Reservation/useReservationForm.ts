@@ -55,7 +55,13 @@ export function useReservationForm() {
       }
       router.push('/reservas');
     } catch (error) {
+      
       handleValidationError(error);
+      if ((error as any).response && (error as any).response.data && (error as any).response.data.errors) {
+        if ((error as any).response?.data?.errors) {
+          errors.value = (error as any).response.data.errors;
+        }
+      }
       if (errorMessage.value) {
         showErrorNotification('Error al guardar la reserva', errorMessage.value);
       }

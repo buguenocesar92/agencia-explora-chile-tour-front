@@ -27,12 +27,10 @@ export function useFormValidation() {
       errors.value = response.data.errors as { [key: string]: string[] };
       errorMessage.value = response.data.message || 'Validation error occurred.';
 
-      // Crear un mensaje HTML dinámico para mostrar los errores detallados
       const errorDetails = Object.entries(errors.value)
         .map(([field, messages]) => `<p><strong>${field}:</strong> ${messages.join(', ')}</p>`)
         .join('');
 
-      // Mostrar SweetAlert2 con los errores detallados
       Swal.fire({
         icon: 'error',
         title: 'Validation Error',
@@ -55,7 +53,7 @@ export function useFormValidation() {
         text: errorMessage.value,
         confirmButtonText: 'OK',
       }).then(() => {
-        router.push('/403'); // Redirigir al 403
+        router.push('/403');
       });
     } else if (response?.status === 409) {
       errorMessage.value = response.data.message || 'A conflict occurred.';

@@ -20,4 +20,5 @@ import ReservationForm from '@/components/Reserva/ReservationForm.vue';
 import { useReservationForm } from '~/composables/Reservation/useReservationForm';
 
 const { reservation, isLoading, errors, handleSubmit } = useReservationForm();
+console.log('Errors:', errors);
 </script>
