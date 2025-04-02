@@ -45,7 +45,6 @@ export function useReservationForm() {
     try {
       if (isEditing.value) {
         const formData = toFormData(reservation.value);
-        // Agregamos _method override para enviar como POST
         formData.append('_method', 'PUT');
         await updateReservation(reservation.value.id, formData);
         showSuccessNotification('Éxito', 'Reserva actualizada correctamente');

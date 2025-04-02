@@ -169,17 +169,31 @@ const { isEditing, isLoading, errors } = toRefs(props);
 const previewUrl = ref('');
 const selectedTripId = ref('');
 
-// Opciones para seleccionar un viaje (puedes parametrizarlo si lo deseas)
+// Opciones para seleccionar un viaje (pueden provenir de una API o ser estáticas)
 const tripOptions = ref([
   { id: 1, departure: '2025-04-01', return: '2025-04-10' },
   { id: 2, departure: '2025-05-01', return: '2025-05-10' },
   { id: 3, departure: '2025-06-01', return: '2025-06-10' },
 ]);
 
-// Actualiza la copia local cuando modelValue cambie
+// Sincroniza la copia local cuando modelValue cambie
 watch(() => props.modelValue, (newVal) => {
   localReservation.value = { ...newVal };
 });
+
+// Cuando se cargue la reserva en edición, asignar el id del viaje al select
+watch(
+  () => localReservation.value.trip.id,
+  (newTripId) => {
+    if (newTripId) {
+      selectedTripId.value = newTripId.toString();
+      console.log('selectedTripId.value', selectedTripId.value);
+    } else {
+      selectedTripId.value = '';
+    }
+  },
+  { immediate: true }
+);
 
 function onTripChange() {
   const selected = tripOptions.value.find(
