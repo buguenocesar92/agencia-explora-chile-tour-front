@@ -1,59 +1,53 @@
-<script setup lang="ts">
-import { onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import AdminWrapper from '@/components/AdminWrapper.vue';
-import { useTaskForm } from '@/composables/useTaskForm';
-
-definePageMeta({
-    requiresAuth: true, // o true, según tu lógica
-});
-
-const { task, isEditing, isLoading, errors, handleSubmit, loadTask } = useTaskForm();
-const route = useRoute();
-
-onMounted(() => {
-  const taskId = Number(route.params.id);
-  if (taskId) {
-    isEditing.value = true;
-    loadTask(taskId);
-  }
-});
-</script>
-
 <template>
   <AdminWrapper>
     <div class="container mx-auto p-6 max-w-md">
       <h2 class="text-2xl font-bold mb-6">
-        Editar Tarea
+        Editar Viaje
       </h2>
       <form @submit.prevent="handleSubmit" class="space-y-4">
+        <!-- Campo para seleccionar el Tour Template (ID) -->
         <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Título</label>
+          <label class="block text-gray-700 mb-2">ID del Tour Template</label>
           <input
-            v-model="task.title"
-            type="text"
+            v-model.number="trip.tour_template_id"
+            type="number"
             class="w-full px-3 py-2 border rounded"
-            :class="{ 'border-red-500': errors.title }"
+            :class="{ 'border-red-500': errors.tour_template_id }"
+            placeholder="Ingrese el ID del tour template"
           />
-          <p v-if="errors.title" class="text-red-500 text-sm mt-1">{{ errors.title[0] }}</p>
+          <p v-if="errors.tour_template_id" class="text-red-500 text-sm mt-1">
+            {{ errors.tour_template_id[0] }}
+          </p>
         </div>
+
+        <!-- Campo para la Fecha de Salida -->
         <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Descripción</label>
-          <textarea
-            v-model="task.description"
-            class="w-full px-3 py-2 border rounded"
-            :class="{ 'border-red-500': errors.description }"
-          ></textarea>
-          <p v-if="errors.description" class="text-red-500 text-sm mt-1">{{ errors.description[0] }}</p>
-        </div>
-        <div class="mb-4 flex items-center">
+          <label class="block text-gray-700 mb-2">Fecha de Salida</label>
           <input
-            v-model="task.completed"
-            type="checkbox"
-            class="w-6 h-6 mr-2"
+            v-model="trip.departure_date"
+            type="date"
+            class="w-full px-3 py-2 border rounded"
+            :class="{ 'border-red-500': errors.departure_date }"
           />
-          <label class="text-gray-700">Completado</label>
+          <p v-if="errors.departure_date" class="text-red-500 text-sm mt-1">
+            {{ errors.departure_date[0] }}
+          </p>
         </div>
+
+        <!-- Campo para la Fecha de Regreso -->
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Fecha de Regreso</label>
+          <input
+            v-model="trip.return_date"
+            type="date"
+            class="w-full px-3 py-2 border rounded"
+            :class="{ 'border-red-500': errors.return_date }"
+          />
+          <p v-if="errors.return_date" class="text-red-500 text-sm mt-1">
+            {{ errors.return_date[0] }}
+          </p>
+        </div>
+
         <button
           type="submit"
           :disabled="isLoading"
@@ -65,3 +59,25 @@ onMounted(() => {
     </div>
   </AdminWrapper>
 </template>
+
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import AdminWrapper from '@/components/AdminWrapper.vue';
+import { useTripForm } from '@/composables/Admin/useTripForm';
+
+definePageMeta({
+  requiresAuth: true,
+});
+
+const route = useRoute();
+const { trip, isEditing, isLoading, errors, handleSubmit, loadTrip } = useTripForm();
+
+onMounted(() => {
+  const tripId = Number(route.params.id);
+  if (tripId) {
+    isEditing.value = true;
+    loadTrip(tripId);
+  }
+});
+</script>
