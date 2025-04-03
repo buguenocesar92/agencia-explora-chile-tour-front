@@ -2,35 +2,46 @@
   <AdminWrapper>
     <div class="container mx-auto p-6 max-w-md">
       <h2 class="text-2xl font-bold mb-6">
-        Nueva Tarea
+        Nuevo Tour Template
       </h2>
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Título</label>
+          <label class="block text-gray-700 mb-2">Nombre</label>
           <input
-            v-model="task.title"
+            v-model="tourTemplate.name"
             type="text"
             class="w-full px-3 py-2 border rounded"
-            :class="{ 'border-red-500': errors.title }"
+            :class="{ 'border-red-500': errors.name }"
+            placeholder="Ingresa el nombre del tour"
           />
-          <p v-if="errors.title" class="text-red-500 text-sm mt-1">{{ errors.title[0] }}</p>
+          <p v-if="errors.name" class="text-red-500 text-sm mt-1">
+            {{ errors.name[0] }}
+          </p>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Destino</label>
+          <input
+            v-model="tourTemplate.destination"
+            type="text"
+            class="w-full px-3 py-2 border rounded"
+            :class="{ 'border-red-500': errors.destination }"
+            placeholder="Ingresa el destino"
+          />
+          <p v-if="errors.destination" class="text-red-500 text-sm mt-1">
+            {{ errors.destination[0] }}
+          </p>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 mb-2">Descripción</label>
           <textarea
-            v-model="task.description"
+            v-model="tourTemplate.description"
             class="w-full px-3 py-2 border rounded"
             :class="{ 'border-red-500': errors.description }"
+            placeholder="Ingresa la descripción (opcional)"
           ></textarea>
-          <p v-if="errors.description" class="text-red-500 text-sm mt-1">{{ errors.description[0] }}</p>
-        </div>
-        <div class="mb-4 flex items-center">
-          <input
-            v-model="task.completed"
-            type="checkbox"
-            class="w-6 h-6 mr-2"
-          />
-          <label class="text-gray-700">Completado</label>
+          <p v-if="errors.description" class="text-red-500 text-sm mt-1">
+            {{ errors.description[0] }}
+          </p>
         </div>
         <button
           type="submit"
@@ -46,11 +57,11 @@
 
 <script setup lang="ts">
 import AdminWrapper from '@/components/AdminWrapper.vue';
-import { useTaskForm } from '@/composables/useTaskForm';
+import { useTourTemplateForm } from '@/composables/useTourTemplateForm';
 
 definePageMeta({
-    requiresAuth: true, // o true, según tu lógica
-  });
-// Usamos el composable sin cargar tarea
-const { task, isLoading, errors, handleSubmit } = useTaskForm();
+  requiresAuth: true,
+});
+
+const { tourTemplate, isLoading, errors, handleSubmit } = useTourTemplateForm();
 </script>
