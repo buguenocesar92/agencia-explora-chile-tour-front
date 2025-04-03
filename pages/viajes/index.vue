@@ -2,16 +2,16 @@
   <AdminWrapper>
     <div class="container mx-auto p-6">
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">Gestión de Tareas</h1>
+        <h1 class="text-2xl font-bold">Gestión de Viajes</h1>
         <v-btn color="primary" @click="goToCreate">
           <i class="fas fa-plus mr-2"></i>
-          Nueva Tarea
+          Nuevo Viaje
         </v-btn>
       </div>
 
       <v-data-table
         :headers="headers"
-        :items="tasks"
+        :items="trips"
         :loading="isLoading"
         class="elevation-1"
       >
@@ -30,7 +30,7 @@
 
         <template #no-data>
           <div class="text-center py-4 text-gray-500">
-            No se encontraron tareas
+            No se encontraron viajes
           </div>
         </template>
       </v-data-table>
@@ -39,14 +39,16 @@
 </template>
 
 <script setup lang="ts">
-import { useTaskManager } from '@/composables/useTaskManager';
 import AdminWrapper from '@/components/AdminWrapper.vue';
+import { useTripManager } from '@/composables/useTripManager';
+
 definePageMeta({
-    requiresAuth: true, // o true, según tu lógica
-    sidebar: true,
-    label: 'Viajes',
-    icon: 'mdi-format-list-checkbox'
-  });
-// Extraemos la lógica del composable
-const { tasks, isLoading, headers, handleDelete, goToCreate, goToEdit } = useTaskManager();
+  requiresAuth: true,
+  sidebar: true,
+  label: 'Viajes',
+  icon: 'mdi-calendar-clock'
+});
+
+// Extraemos la lógica del composable de gestión de viajes.
+const { trips, isLoading, headers, handleDelete, goToCreate, goToEdit } = useTripManager();
 </script>
