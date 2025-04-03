@@ -89,8 +89,8 @@ export function usePaymentForm() {
         formData.append(`trip[${key}]`, tripData[key]);
       }
       // Agregamos los datos de pago
-      formData.append('payment[amount]', payment.value.amount.toString());
-      formData.append('payment[transaction_id]', payment.value.transaction_id);
+/*       formData.append('payment[amount]', payment.value.amount.toString());
+      formData.append('payment[transaction_id]', payment.value.transaction_id); */
       if (payment.value.receipt) {
         formData.append('payment[receipt]', payment.value.receipt);
       }
