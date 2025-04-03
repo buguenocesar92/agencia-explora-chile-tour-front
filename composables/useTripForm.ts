@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router';
 export function useTripForm() {
   // Inicializamos el objeto 'trip'
   const trip = ref<TripPayload>({
+    id: 0, // Default value for id
     destination: '',
     departure_date: '',
     return_date: '',

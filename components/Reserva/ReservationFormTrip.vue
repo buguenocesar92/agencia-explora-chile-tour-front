@@ -3,95 +3,73 @@
     <h2 class="text-2xl font-bold mb-6">2. Selección del Viaje</h2>
     <v-form ref="form" @submit.prevent>
       <div class="space-y-4">
-        <FormInput
-          id="destination"
-          label="Destino"
-          v-model="trip.destination"
-          placeholder="Ingresa el destino"
-          :error="errors.destination ? errors.destination[0] : ''"
+        <!-- Select para elegir el Tour definido -->
+        <FormSelect
+          id="tourSelect"
+          label="Selecciona un Tour"
+          v-model="selectedTourId"
+          :options="tourSelectOptions"
+          placeholder="Seleccione un tour"
+          :error="errors.tourSelect ? errors.tourSelect[0] : ''"
+          @update:modelValue="onTourChange"
         />
 
+        <!-- Select para elegir las fechas programadas del tour -->
         <FormSelect
-          id="tripOption"
-          label="Selecciona un viaje"
-          v-model="selectedTripId"
-          :options="tripSelectOptions"
+          id="dateSelect"
+          label="Selecciona las fechas"
+          v-model="selectedDateId"
+          :options="dateSelectOptions"
           placeholder="Seleccione una opción"
-          :error="errors.tripOption ? errors.tripOption[0] : ''"
-          @update:modelValue="onTripChange"
+          :error="errors.dateSelect ? errors.dateSelect[0] : ''"
+          @update:modelValue="onDateChange"
         />
+
       </div>
     </v-form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import FormInput from '@/components/FormInput.vue';
+import { ref, onMounted } from 'vue';
 import FormSelect from '@/components/FormSelect.vue';
 import { useTripForm } from '@/composables/useTripForm';
+import { useTourSelect } from '@/composables/useTourSelect';
 
-const { trip, isLoading, errors, validateTrip } = useTripForm();
+const { trip, errors, validateTrip } = useTripForm();
 const form = ref(null);
 
-// Opciones de viajes predeterminadas
-const tripOptions = ref([
-  { id: 1, departure: '2025-04-01', return: '2025-04-10' },
-  { id: 2, departure: '2025-05-01', return: '2025-05-10' },
-  { id: 3, departure: '2025-06-01', return: '2025-06-10' },
-]);
+// Importar la lógica de los selects y pasarle el objeto trip y errors.
+const {
+  tourSelectOptions,
+  dateSelectOptions,
+  selectedTourId,
+  selectedDateId,
+  onTourChange,
+  onDateChange,
+  validateSelects
+} = useTourSelect(trip, errors);
 
-// Almacena el id seleccionado para el viaje
-const selectedTripId = ref('');
-
-// Se mapea tripOptions al formato que requiere FormSelect: { id, name }
-const tripSelectOptions = computed(() =>
-  tripOptions.value.map(option => ({
-    id: option.id,
-    name: `${option.departure} - ${option.return}`,
-  }))
-);
-
-// Función que actualiza las fechas del viaje según la opción seleccionada
-function onTripChange() {
-  const selected = tripOptions.value.find(
-    option => option.id === parseInt(selectedTripId.value)
-  );
-  if (selected) {
-    trip.value.departure_date = selected.departure;
-    trip.value.return_date = selected.return;
-  } else {
-    trip.value.departure_date = '';
-    trip.value.return_date = '';
-  }
-}
-
-// Método de validación que será llamado desde el componente padre
+// Método de validación combinado: valida tanto el formulario (trip) como los selects.
 const validate = async () => {
-  // Validar usando el composable
-  const isValid = await validateTrip();
-  console.log('Validación de selección de viaje:', isValid);
+  const validForm = await validateTrip();
+  const validSelects = validateSelects();
+  const isValid = validForm && validSelects;
+  console.log('Validación combinada de selección de viaje:', isValid);
   return isValid;
 };
 
-// Al montar el componente, se carga la data guardada en localStorage
+// Restaurar datos guardados en localStorage, si existen.
 onMounted(() => {
   const savedData = localStorage.getItem('tripData');
   if (savedData) {
     const savedTrip = JSON.parse(savedData);
     trip.value = savedTrip;
-    const matchingOption = tripOptions.value.find(
-      option =>
-        option.departure === savedTrip.departure_date &&
-        option.return === savedTrip.return_date
-    );
-    if (matchingOption) {
-      selectedTripId.value = matchingOption.id.toString();
-    }
+    // Si deseas, podrías restaurar también los IDs de los selects.
   }
 });
 
-// Exponer el método validate para que el componente padre pueda acceder
+// Exponer el método validate para que el componente padre (por ejemplo, wizard.vue) pueda acceder.
 defineExpose({
   validate
 });
