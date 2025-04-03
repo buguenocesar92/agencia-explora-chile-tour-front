@@ -18,7 +18,7 @@ export function useTripManager() {
   // Encabezados para la tabla de viajes.
   const headers = [
     { title: 'ID', value: 'id' },
-    { title: 'Tour Template', value: 'tour_template.name' },
+    { title: 'Tour', value: 'tour_template.name' },
     { title: 'Fecha de Salida', value: 'departure_date' },
     { title: 'Fecha de Regreso', value: 'return_date' },
     { title: 'Acciones', value: 'actions', sortable: false },
