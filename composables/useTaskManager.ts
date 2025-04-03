@@ -66,9 +66,9 @@ export function useTaskManager() {
     router.push(`/tareas/editar/${id}`);
   }
 
-/*   onMounted(() => {
+  onMounted(() => {
     loadTasks();
-  }); */
+  });
 
   return { tasks, isLoading, headers, loadTasks, handleDelete, goToCreate, goToEdit };
 }
