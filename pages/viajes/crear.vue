@@ -12,6 +12,7 @@
             id="tourTemplateSelect"
             v-model="trip.tour_template_id"
             :options="tourTemplateOptions"
+            label="Tour Template"
             placeholder="Seleccione un tour template"
             :error="errors.tour_template_id ? errors.tour_template_id[0] : ''"
           />

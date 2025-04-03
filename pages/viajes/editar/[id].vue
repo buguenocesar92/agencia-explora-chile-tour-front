@@ -5,21 +5,18 @@
         Editar Viaje
       </h2>
       <form @submit.prevent="handleSubmit" class="space-y-4">
-        <!-- Campo para seleccionar el Tour Template (ID) -->
+        <!-- Select para elegir el Tour Template -->
         <div class="mb-4">
-          <label class="block text-gray-700 mb-2">ID del Tour Template</label>
-          <input
-            v-model.number="trip.tour_template_id"
-            type="number"
-            class="w-full px-3 py-2 border rounded"
-            :class="{ 'border-red-500': errors.tour_template_id }"
-            placeholder="Ingrese el ID del tour template"
+          <label class="block text-gray-700 mb-2">Tour Template</label>
+          <FormSelect
+            id="tourTemplateSelect"
+            v-model="trip.tour_template_id"
+            :options="tourTemplateOptions"
+            label="Tour Template"
+            placeholder="Seleccione un tour template"
+            :error="errors.tour_template_id ? errors.tour_template_id[0] : ''"
           />
-          <p v-if="errors.tour_template_id" class="text-red-500 text-sm mt-1">
-            {{ errors.tour_template_id[0] }}
-          </p>
         </div>
-
         <!-- Campo para la Fecha de Salida -->
         <div class="mb-4">
           <label class="block text-gray-700 mb-2">Fecha de Salida</label>
@@ -33,7 +30,6 @@
             {{ errors.departure_date[0] }}
           </p>
         </div>
-
         <!-- Campo para la Fecha de Regreso -->
         <div class="mb-4">
           <label class="block text-gray-700 mb-2">Fecha de Regreso</label>
@@ -47,7 +43,6 @@
             {{ errors.return_date[0] }}
           </p>
         </div>
-
         <button
           type="submit"
           :disabled="isLoading"
@@ -61,10 +56,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import AdminWrapper from '@/components/AdminWrapper.vue';
+import FormSelect from '@/components/FormSelect.vue';
 import { useTripForm } from '@/composables/Admin/useTripForm';
+import { fetchTourTemplates } from '@/services/TourTemplateService';
+import type { TourTemplatePayload } from '@/types/TourTemplateTypes';
 
 definePageMeta({
   requiresAuth: true,
@@ -73,11 +71,23 @@ definePageMeta({
 const route = useRoute();
 const { trip, isEditing, isLoading, errors, handleSubmit, loadTrip } = useTripForm();
 
-onMounted(() => {
+// Cargar los tour templates para el select
+const tourTemplates = ref<TourTemplatePayload[]>([]);
+const tourTemplateOptions = computed(() =>
+  tourTemplates.value.map(template => ({
+    id: template.id,
+    name: template.name
+  }))
+);
+
+onMounted(async () => {
+  // Cargar tour templates
+  tourTemplates.value = await fetchTourTemplates();
+  // Cargar los datos del viaje a editar
   const tripId = Number(route.params.id);
   if (tripId) {
     isEditing.value = true;
-    loadTrip(tripId);
+    await loadTrip(tripId);
   }
 });
 </script>
