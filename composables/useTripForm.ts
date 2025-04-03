@@ -1,3 +1,4 @@
+// src/composables/useTripForm.ts
 import { ref, onMounted } from 'vue';
 import { useNotification } from '@/composables/useNotification';
 import { useFormValidation } from '@/composables/useFormValidation';
@@ -5,13 +6,10 @@ import type { TripPayload } from '@/types/TripType';
 import { useRouter } from 'vue-router';
 
 export function useTripForm() {
-  // Inicializamos el objeto 'trip'
+  // Inicializamos el objeto 'trip' con los IDs (por defecto 0 significa no seleccionado)
   const trip = ref<TripPayload>({
-    id: 0, // Default value for id
-    destination: '',
-    departure_date: '',
-    return_date: '',
-    service_type: ''
+    tour_id: 0,
+    trip_date_id: 0
   });
 
   const router = useRouter();
@@ -33,17 +31,13 @@ export function useTripForm() {
   async function validateTrip() {
     errors.value = {};
     
-    // Validar campos requeridos
-    if (!trip.value.destination) {
-      errors.value.destination = ['El destino es requerido'];
+    // Validar que se haya seleccionado un tour (tour_id) y una fecha (trip_date_id)
+    if (!trip.value.tour_id || trip.value.tour_id === 0) {
+      errors.value.tour_id = ['Debe seleccionar un tour'];
     }
     
-    if (!trip.value.departure_date) {
-      errors.value.departure_date = ['La fecha de salida es requerida'];
-    }
-    
-    if (!trip.value.return_date) {
-      errors.value.return_date = ['La fecha de regreso es requerida'];
+    if (!trip.value.trip_date_id || trip.value.trip_date_id === 0) {
+      errors.value.trip_date_id = ['Debe seleccionar una fecha'];
     }
     
     // Si hay errores, retornar false

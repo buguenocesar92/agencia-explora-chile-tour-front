@@ -60,11 +60,11 @@ export function usePaymentForm() {
     errors.value = {};
     try {
       // Guarda los campos de pago (sin el file) en localStorage para persistir los datos de texto
-      const paymentDataToSave = {
+/*       const paymentDataToSave = {
         amount: payment.value.amount,
         transaction_id: payment.value.transaction_id
       };
-      localStorage.setItem('paymentData', JSON.stringify(paymentDataToSave));
+      localStorage.setItem('paymentData', JSON.stringify(paymentDataToSave)); */
 
       // Recupera los datos de cliente y viaje guardados en localStorage
       const clientDataStr = localStorage.getItem('clientData');
