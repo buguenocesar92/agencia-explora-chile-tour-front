@@ -19,7 +19,7 @@
           {{ item.client ? item.client.name : 'Sin cliente' }}
         </template>
         <template #item.trip="{ item }">
-          {{ item.trip ? item.trip.destination : 'Sin viaje' }}
+          {{ item.trip ? item.trip.tour_template.destination : 'Sin viaje' }}
         </template>
         <template #item.payment="{ item }">
           <div v-if="item.payment">

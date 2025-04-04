@@ -43,7 +43,7 @@ import { useTaskManager } from '@/composables/useTaskManager';
 import AdminWrapper from '@/components/AdminWrapper.vue';
 definePageMeta({
     requiresAuth: true, // o true, según tu lógica
-    sidebar: true,
+    sidebar: false,
     label: 'Tareas',
     icon: 'mdi-format-list-checkbox'
   });
