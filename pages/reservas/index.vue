@@ -18,9 +18,8 @@
         <template #item.client="{ item }">
           {{ item.client ? item.client.name : 'Sin cliente' }}
         </template>
-        <template #item.trip="{ item }">
-          {{ item.trip ? item.trip.tour_template.destination : 'Sin viaje' }}
-        </template>
+
+
         <template #item.payment="{ item }">
           <div v-if="item.payment">
             <!-- Botón que abre la modal para mostrar el comprobante -->
@@ -51,7 +50,7 @@
 <!--           <v-btn text color="primary" @click="goToUpdate(item.id)">
             Editar
           </v-btn> -->
-          <v-btn color="error" @click="handleDelete(item.id)">
+          <v-btn class="ml-5" color="error" @click="handleDelete(item.id)">
               <v-icon start>mdi-delete</v-icon>
               Eliminar
           </v-btn>
@@ -106,7 +105,7 @@ onMounted(() => {
 const headers = [
   { title: 'ID', value: 'id' },
   { title: 'Cliente', value: 'client', sortable: false },
-  { title: 'Viaje', value: 'trip', sortable: false },
+/*   { title: 'Viaje', value: 'trip', sortable: false }, */
   { title: 'Comprobante de Pago', value: 'payment', sortable: false },
   { title: 'Fecha', value: 'date' },
   { title: 'Status', value: 'status' },
