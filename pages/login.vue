@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex flex-col">
-    <Navbar bgColor="bg-gradient-to-r from-indigo-600 to-purple-600" />
+    <Navbar bgColor="bg-gradient-to-r from-sky-600 to-teal-500" />
     
     <div class="flex-grow bg-gray-50 dark:bg-gray-900">
       <!-- Hero section con gradiente -->
