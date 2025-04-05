@@ -2,9 +2,9 @@
   <div class="min-h-screen flex flex-col">
     <Navbar bgColor="bg-gradient-to-r from-sky-600 to-teal-500" />
     
-    <div class="flex-grow bg-gray-50 dark:bg-gray-900">
+    <div class="flex-grow bg-gray-50 dark:bg-gray-900 mt-12">
       <!-- Hero section con gradiente -->
-      <div class="relative bg-gradient-to-r from-indigo-600 to-purple-600 py-16">
+      <div class="relative bg-gradient-to-r from-sky-600 to-teal-500 py-16">
         <div class="container mx-auto px-4 relative z-20 text-center">
           <h1 class="text-4xl font-bold text-white mb-4">Inicia Sesión en tu Cuenta</h1>
           <p class="text-white text-lg mb-8 max-w-2xl mx-auto">
@@ -38,7 +38,7 @@
                     type="email" 
                     required
                     placeholder="Ejemplo: correo@dominio.com"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500" 
                   />
                   <p v-if="errors.email?.[0]" class="mt-1 text-sm text-red-600 dark:text-red-400">
                     {{ errors.email[0] }}
@@ -56,7 +56,7 @@
                     type="password" 
                     required
                     placeholder="Introduce tu contraseña"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500" 
                   />
                   <p v-if="errors.password?.[0]" class="mt-1 text-sm text-red-600 dark:text-red-400">
                     {{ errors.password[0] }}
@@ -66,14 +66,14 @@
                 <!-- Enlaces de ayuda -->
                 <div class="flex items-center justify-between">
                   <div class="flex items-center">
-                    <input id="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <input id="remember-me" type="checkbox" class="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded">
                     <label for="remember-me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                       Recordarme
                     </label>
                   </div>
                   
                   <div class="text-sm">
-                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                    <a href="#" class="font-medium text-teal-600 hover:text-teal-500 dark:text-teal-400 dark:hover:text-teal-300">
                       ¿Olvidaste tu contraseña?
                     </a>
                   </div>
@@ -83,7 +83,7 @@
                 <button
                   type="submit"
                   :disabled="isLoading"
-                  class="w-full px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="w-full px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
                 </button>
@@ -107,7 +107,7 @@
               <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   ¿No tienes una cuenta?
-                  <a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                  <a href="/register" class="font-medium text-teal-600 hover:text-teal-500 dark:text-teal-400 dark:hover:text-teal-300">
                     Regístrate ahora
                   </a>
                 </p>
@@ -121,13 +121,13 @@
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">¿Necesitas ayuda?</h2>
               <ul class="space-y-2 text-gray-700 dark:text-gray-300">
                 <li class="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <span>Si tienes problemas para iniciar sesión, contacta a soporte.</span>
                 </li>
                 <li class="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <span>Asegúrate de usar el correo electrónico con el que te registraste.</span>

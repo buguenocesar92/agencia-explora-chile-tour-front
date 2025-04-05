@@ -6,12 +6,12 @@
            style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80');
                   filter: brightness(0.7);">
       </div>
-      <v-container class="py-20 relative z-10">
-        <div class="text-center text-white mb-12">
+      <v-container class="py-20 relative z-10 mt-12">
+<!--         <div class="text-center text-white mb-12">
           <h1 class="text-5xl font-bold mb-4">Descubre el mundo con nosotros</h1>
           <p class="text-xl max-w-2xl mx-auto">Experiencias únicas y destinos inolvidables para tus vacaciones perfectas</p>
-        </div>
-        <div class="flex justify-center">
+        </div> -->
+        <div class="flex justify-center mt-12">
           <v-card class="reservation-card px-0 py-0 rounded-xl overflow-hidden" max-width="500" elevation="15">
             <div class="card-header bg-gradient-to-r from-teal-600 to-cyan-500 py-6 px-8 relative">
               <div class="absolute top-0 right-0 w-32 h-32">
