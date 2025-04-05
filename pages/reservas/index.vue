@@ -3,10 +3,10 @@
     <div class="container mx-auto p-6">
       <!-- Encabezado con botón para crear una nueva reserva -->
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">Lista de Reservas</h1>
-        <v-btn color="primary" @click="goToCreate">
+        <h1 class="text-2xl font-bold">Gestión de Reservas</h1>
+<!--         <v-btn color="primary" @click="goToCreate">
           Nueva Reserva
-        </v-btn>
+        </v-btn> -->
       </div>
 
       <v-data-table
@@ -48,9 +48,9 @@
             Marcar como Pagado
           </v-btn>
           <!-- Botón para editar la reserva -->
-          <v-btn text color="primary" @click="goToUpdate(item.id)">
+<!--           <v-btn text color="primary" @click="goToUpdate(item.id)">
             Editar
-          </v-btn>
+          </v-btn> -->
           <v-btn color="error" @click="handleDelete(item.id)">
               <v-icon start>mdi-delete</v-icon>
               Eliminar
@@ -132,12 +132,12 @@ function closeModal() {
 }
 
 // Funciones para navegación a crear y editar reservas
-function goToCreate() {
+/* function goToCreate() {
   router.push('/reservas/crear');
 }
-
-function goToUpdate(id: number) {
+ */
+/* function goToUpdate(id: number) {
   router.push(`/reservas/editar/${id}`);
-}
+} */
 
 </script>
