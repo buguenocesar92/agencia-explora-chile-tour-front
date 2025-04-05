@@ -16,17 +16,24 @@
       >
         <!-- Columna Cliente: botón que abre modal de detalles del cliente -->
         <template #item.client="{ item }">
-          <v-btn text color="primary" @click="openClientModal(item.client)">
+          <span
+            class="text-blue-600 hover:underline cursor-pointer"
+            @click="openClientModal(item.client)"
+          >
             {{ item.client ? item.client.name : 'Sin cliente' }}
-          </v-btn>
+          </span>
         </template>
 
         <!-- Columna Viaje: botón que abre modal con detalles del viaje -->
         <template #item.trip="{ item }">
-          <v-btn text color="primary" @click="openTripModal(item.trip)">
-            Ver Viaje
-          </v-btn>
-        </template>
+        <span
+          class="text-blue-600 hover:underline cursor-pointer"
+          @click="openTripModal(item.trip)"
+        >
+           {{ item.trip ? item.trip.tour_template.name : 'Sin viaje' }}
+        </span>
+      </template>
+
 
         <template #item.payment="{ item }">
           <div v-if="item.payment">
