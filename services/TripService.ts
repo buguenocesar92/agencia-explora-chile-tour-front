@@ -1,6 +1,6 @@
 // src/services/TripService.ts
 import { useNuxtApp } from '#app';
-import type { TripPayload } from '@/types/TripTypes';
+import type { TripPayload } from '@/types/TripType';
 
 /**
  * Obtiene todos los viajes.
