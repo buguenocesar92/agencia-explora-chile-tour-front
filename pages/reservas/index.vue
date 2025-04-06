@@ -36,13 +36,13 @@
 
         <!-- Columna Viaje: botón que abre modal con detalles del viaje -->
         <template #item.trip="{ item }">
-        <span
-          class="text-blue-600 hover:underline cursor-pointer"
-          @click="openTripModal(item.trip)"
-        >
-           {{ item.trip ? item.trip.tour_template.name : 'Sin viaje' }}
-        </span>
-      </template>
+          <span
+            class="text-blue-600 hover:underline cursor-pointer"
+            @click="openTripModal(item.trip)"
+          >
+            {{ item.trip?.tour_template?.name || 'Sin viaje' }}
+          </span>
+        </template>
 
 
         <template #item.payment="{ item }">

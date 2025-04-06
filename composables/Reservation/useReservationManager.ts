@@ -1,9 +1,9 @@
 // composables/useReservationManager.ts
 import { ref } from 'vue';
 import { fetchReservations, updateReservationStatusService, deleteReservation } from '@/services/ReservationService';
-import type { ReservationPayload } from '@/types/ReservationTypes';
 import { useNotification } from '@/composables/useNotification';
 import { useFormValidation } from '@/composables/useFormValidation';
+import type { ReservationPayload } from '@/types/ReservationTypes';
 
 export function useReservationManager() {
   const { showSuccessNotification, showErrorNotification } = useNotification();

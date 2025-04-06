@@ -1,7 +1,12 @@
-// src/types/TripType.ts
 export interface TripPayload {
-  id: number;          // ID del viaje
-  tour_id: number;       // ID del tour (plantilla) seleccionado
-  trip_date_id: number;  // ID de la programación (fecha) seleccionada
-  // Puedes agregar otros campos si fueran necesarios (como service_type)
+  id: number;
+  tour_id: number;
+  trip_date_id: number;
+  tour_template?: {
+    name: string;
+    destination: string;
+    description: string;
+  };
+  departure_date?: string;
+  return_date?: string;
 }
