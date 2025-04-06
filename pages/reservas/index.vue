@@ -189,6 +189,7 @@ onMounted(() => {
 const headers = [
   { title: 'ID', value: 'id' },
   { title: 'Cliente', value: 'client', sortable: false },
+  { title: 'Rut', value: 'client.rut', sortable: false }, 
   { title: 'Viaje', value: 'trip', sortable: false },
   { title: 'Comprobante de Pago', value: 'payment', sortable: false },
   { title: 'Fecha', value: 'date' },
