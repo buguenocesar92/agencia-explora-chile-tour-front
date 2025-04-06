@@ -11,10 +11,10 @@ export function useReservationManager() {
   const reservations = ref<ReservationPayload[]>([]);
   const isLoading = ref(false);
 
-  async function loadReservations() {
+  async function loadReservations(search = '') {
     isLoading.value = true;
     try {
-      reservations.value = await fetchReservations();
+      reservations.value = await fetchReservations(search); // Pasar parámetro de búsqueda
     } catch (error) {
       handleValidationError(error);
       if (errorMessage.value) {

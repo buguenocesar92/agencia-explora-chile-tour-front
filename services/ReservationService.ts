@@ -2,9 +2,13 @@
 import { useNuxtApp } from '#app';
 import type { ReservationPayload } from '@/types/ReservationTypes';
 
-export async function fetchReservations(): Promise<ReservationPayload[]> {
+export async function fetchReservations(search?: string): Promise<ReservationPayload[]> {
   const { $axios } = useNuxtApp();
-  const response = await $axios.get('/reservations');
+  const response = await $axios.get('/reservations', {
+    params: {
+      search: search || undefined
+    }
+  });
   return response.data.reservations;
 }
 

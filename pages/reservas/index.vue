@@ -4,6 +4,16 @@
       <!-- Encabezado con botón para crear una nueva reserva -->
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">Gestión de Reservas</h1>
+        <v-text-field
+          v-model="searchQuery"
+          label="Buscar por nombre o RUT"
+          prepend-inner-icon="mdi-magnify"
+          clearable
+          outlined
+          dense
+          class="max-w-md"
+          @update:model-value="loadReservations"
+        ></v-text-field>
         <!-- Botón para crear nueva reserva (opcional) -->
         <!-- <v-btn color="primary" @click="goToCreate">Nueva Reserva</v-btn> -->
       </div>
@@ -152,12 +162,17 @@ definePageMeta({
   icon: 'mdi-format-list-checkbox'
 });
 
+const searchQuery = ref('');
+
 // Extraemos la lógica del composable de reservas
 const { reservations, isLoading, loadReservations, updateReservationStatus, handleDelete } = useReservationManager();
+
+
+
 const router = useRouter();
 
 onMounted(() => {
-  loadReservations();
+  loadReservations(searchQuery.value);
 });
 
 const headers = [
