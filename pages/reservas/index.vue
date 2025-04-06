@@ -12,7 +12,7 @@
           outlined
           dense
           class="max-w-md"
-          @update:model-value="loadReservations"
+          @update:model-value="handleSearch"
         ></v-text-field>
         <!-- Botón para crear nueva reserva (opcional) -->
         <!-- <v-btn color="primary" @click="goToCreate">Nueva Reserva</v-btn> -->
@@ -152,6 +152,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useDebounceFn } from '@vueuse/core'
 import AdminWrapper from '@/components/AdminWrapper.vue';
 import { useReservationManager } from '@/composables/Reservation/useReservationManager';
 
@@ -163,10 +164,20 @@ definePageMeta({
 });
 
 const searchQuery = ref('');
-
+const DEBOUNCE_TIME = 300; 
 // Extraemos la lógica del composable de reservas
 const { reservations, isLoading, loadReservations, updateReservationStatus, handleDelete } = useReservationManager();
 
+
+// Debounce con cancelación automática
+const debouncedSearch = useDebounceFn((value: string) => {
+  loadReservations(value);
+}, DEBOUNCE_TIME);
+
+// Manejar cambios limpios
+function handleSearch(value: string) {
+  debouncedSearch(value);
+}
 
 
 const router = useRouter();

@@ -10,6 +10,7 @@ export function useReservationManager() {
   const { errorMessage, handleValidationError } = useFormValidation();
   const reservations = ref<ReservationPayload[]>([]);
   const isLoading = ref(false);
+  
 
   async function loadReservations(search = '') {
     isLoading.value = true;
