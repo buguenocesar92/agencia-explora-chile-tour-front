@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import AdminWrapper from '@/components/AdminWrapper.vue';
 import { useClientForm } from '@/composables/useClientForm';
+import RutInput from '@/components/inputs/RutInput.vue';
 
 definePageMeta({
   requiresAuth: true,
+});
+
+// Estado para validación del RUT
+const rutValidation = ref({
+  isValid: true // Asumimos que inicialmente es válido en edición
 });
 
 const { client, isEditing, isLoading, errors, handleSubmit, loadClient } = useClientForm();
@@ -39,12 +45,9 @@ onMounted(() => {
         </div>
         
         <div class="mb-4">
-          <label class="block text-gray-700 mb-2">RUT</label>
-          <input
+          <RutInput
             v-model="client.rut"
-            type="text"
-            class="w-full px-3 py-2 border rounded"
-            :class="{ 'border-red-500': errors.rut }"
+            @validation="rutValidation.isValid = $event"
           />
           <p v-if="errors.rut" class="text-red-500 text-sm mt-1">{{ errors.rut[0] }}</p>
         </div>
@@ -95,7 +98,7 @@ onMounted(() => {
         
         <button
           type="submit"
-          :disabled="isLoading"
+          :disabled="isLoading || !rutValidation.isValid"
           class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:opacity-50"
         >
           {{ isLoading ? 'Guardando...' : 'Guardar' }}
