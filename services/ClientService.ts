@@ -24,6 +24,39 @@ export async function fetchClient(id: number): Promise<ClientPayload> {
 }
 
 /**
+ * Busca un cliente por RUT.
+ */
+export async function fetchClientByRut(rut: string): Promise<ClientPayload | null> {
+  try {
+    const { $axios } = useNuxtApp();
+    const response = await $axios.get('/clients', {
+      params: { rut }
+    });
+    
+    // Verificar si se recibió una respuesta
+    if (response.data && Array.isArray(response.data)) {
+      // Normalizar el RUT de búsqueda (eliminar puntos y guiones)
+      const normalizedSearchRut = rut.replace(/[.-]/g, '');
+      
+      // Buscar el cliente que tenga exactamente el mismo RUT
+      const exactMatch = response.data.find(client => {
+        // Normalizar el RUT del cliente para comparación
+        const normalizedClientRut = client.rut.replace(/[.-]/g, '');
+        return normalizedClientRut === normalizedSearchRut;
+      });
+      
+      // Devolver el cliente con el RUT exacto o null si no hay coincidencia exacta
+      return exactMatch || null;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error al buscar cliente por RUT:', error);
+    return null;
+  }
+}
+
+/**
  * Crea un nuevo cliente.
  */
 export async function createClient(data: ClientPayload): Promise<ClientPayload> {

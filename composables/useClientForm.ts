@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { fetchClient, createClient, updateClient } from '@/services/ClientService';
+import { fetchClient, createClient, updateClient, fetchClientByRut } from '@/services/ClientService';
 import { useNotification } from '@/composables/useNotification';
 import { useFormValidation } from '@/composables/useFormValidation';
 import type { ClientPayload } from '@/types/ClientTypes';
@@ -36,6 +36,34 @@ export function useClientForm() {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  // Función para cargar cliente por RUT
+  async function fillClientByRut(rut: string) {
+    isLoading.value = true;
+    try {
+      // Normalizar el RUT antes de buscar (eliminar puntos y guiones)
+      const normalizedRut = rut.replace(/[.-]/g, '');
+      const fetchedClient = await fetchClientByRut(normalizedRut);
+      
+      if (fetchedClient) {
+        client.value = fetchedClient;
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error al buscar cliente por RUT:', error);
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Función para rellenar datos del cliente desde un objeto
+  function fillClientData(clientData: ClientPayload) {
+    client.value = { ...clientData };
+    localStorage.setItem('clientData', JSON.stringify(client.value));
+    return true;
   }
 
   async function handleSubmit() {
@@ -146,6 +174,8 @@ export function useClientForm() {
     errors, 
     handleSubmit, 
     loadClient,
+    fillClientByRut,
+    fillClientData,
     validateClient
   };
 }

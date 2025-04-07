@@ -51,18 +51,6 @@
           @update:modelValue="onDateChange"
           :disabled="!selectedTourId || dateSelectOptions.length === 0"
         />
-
-        <!-- Información de depuración (solo en desarrollo) -->
-        <div v-if="debug" class="mt-6 p-4 bg-gray-100 rounded-lg text-xs">
-          <p class="font-semibold mb-2">Información de depuración:</p>
-          <p>Tour ID seleccionado: {{ selectedTourId || 'Ninguno' }}</p>
-          <p>Fecha ID seleccionada: {{ selectedDateId || 'Ninguna' }}</p>
-          <p>Cantidad de tours: {{ tourSelectOptions.length }}</p>
-          <p>Tours disponibles: {{ JSON.stringify(tourSelectOptions) }}</p>
-          <p>Cantidad de fechas: {{ dateSelectOptions.length }}</p>
-          <p>Fechas disponibles: {{ JSON.stringify(dateSelectOptions) }}</p>
-          <p>Datos del viaje: {{ JSON.stringify(trip) }}</p>
-        </div>
       </div>
     </v-form>
   </div>
@@ -82,9 +70,6 @@ const loading = reactive({
   tours: false,
   dates: false
 });
-
-// Modo de depuración (cambiar a false en producción)
-const debug = ref(process.env.NODE_ENV === 'development');
 
 // Importar la lógica de los selects y pasarle el objeto trip y errors.
 const {

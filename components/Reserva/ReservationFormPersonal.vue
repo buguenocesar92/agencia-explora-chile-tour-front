@@ -10,13 +10,16 @@
           :error="errors.name ? errors.name[0] : ''"
           placeholder="Ingresa tu nombre completo"
         />
-        <FormInput
+        
+        <!-- Componente especializado para RUT con auto-rellenado -->
+        <RutInput
           id="rut"
           label="Rut"
           v-model="client.rut"
           :error="errors.rut ? errors.rut[0] : ''"
-          placeholder="Ingresa tu rut"
+          @client-found="handleClientFound"
         />
+        
         <FormInput
           id="date_of_birth"
           label="Fecha de nacimiento"
@@ -58,9 +61,20 @@
 import { ref } from 'vue';
 import { useClientForm } from '@/composables/useClientForm';
 import FormInput from '@/components/FormInput.vue';
+import RutInput from '@/components/inputs/RutInput.vue';
+import { useNotification } from '@/composables/useNotification';
+import type { ClientPayload } from '@/types/ClientTypes';
 
-const { client, isLoading, errors, validateClient } = useClientForm();
+const { client, isLoading, errors, validateClient, fillClientData } = useClientForm();
 const form = ref(null);
+const { showSuccessNotification } = useNotification();
+
+// Función para manejar cuando se encuentra un cliente por RUT
+function handleClientFound(clientData: ClientPayload) {
+  // Rellenar el formulario con los datos del cliente
+  fillClientData(clientData);
+  showSuccessNotification('Cliente encontrado', 'Los datos se han completado automáticamente');
+}
 
 // Método de validación que será llamado desde el componente padre
 const validate = async () => {
