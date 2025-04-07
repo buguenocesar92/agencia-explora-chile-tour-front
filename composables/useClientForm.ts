@@ -1,11 +1,11 @@
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { fetchClient, createClient, updateClient } from '@/services/ClientService';
 import { useNotification } from '@/composables/useNotification';
 import { useFormValidation } from '@/composables/useFormValidation';
-import type { ClientPayload } from '@/types/ClientType';
-import { useRouter } from 'vue-router';
+import type { ClientPayload } from '@/types/ClientTypes';
 
 export function useClientForm() {
-  // Inicializamos el objeto cliente
   const client = ref<ClientPayload>({
     id: 0,
     name: '',
@@ -15,78 +15,50 @@ export function useClientForm() {
     email: '',
     phone: ''
   });
-
-  const router = useRouter();
+  const isEditing = ref(false);
   const isLoading = ref(false);
   const errors = ref<{ [key: string]: string[] }>({});
+  const router = useRouter();
 
   const { showSuccessNotification, showErrorNotification } = useNotification();
   const { errorMessage, handleValidationError } = useFormValidation();
 
-  // Cargar datos del localStorage al montar el componente
-  onMounted(() => {
-    const savedData = localStorage.getItem('clientData');
-    if (savedData) {
-      client.value = JSON.parse(savedData);
-    }
-  });
-
-  // Método de validación específico para el formulario de cliente
-  async function validateClient() {
-    errors.value = {};
-    
-    // Validar campos requeridos
-    if (!client.value.name) {
-      errors.value.name = ['El nombre es requerido'];
-    }
-    
-    if (!client.value.rut) {
-      errors.value.rut = ['El RUT es requerido'];
-    }
-    
-    if (!client.value.date_of_birth) {
-      errors.value.date_of_birth = ['La fecha de nacimiento es requerida'];
-    }
-    
-    if (!client.value.email) {
-      errors.value.email = ['El correo electrónico es requerido'];
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(client.value.email)) {
-      errors.value.email = ['El formato del correo electrónico no es válido'];
-    }
-    
-    // Si hay errores, retornar false
-    if (Object.keys(errors.value).length > 0) {
-      return false;
-    }
-    
-    // Guardar en localStorage y retornar true
-    localStorage.setItem('clientData', JSON.stringify(client.value));
-    return true;
-  }
-
-  async function handleSubmit() {
-    // Primero validamos
-    const isValid = await validateClient();
-    if (!isValid) return false;
-    
+  async function loadClient(id: number) {
     isLoading.value = true;
     try {
-      // Guardamos la data en localStorage en lugar de enviarla a la BD
-      localStorage.setItem('clientData', JSON.stringify(client.value));
-      /* showSuccessNotification('Éxito', 'Datos guardados correctamente'); */
-      // Navegamos a la siguiente parte del flujo (por ejemplo, Selección del Viaje)
-      router.push('/reserva');
-      return true;
+      const fetchedClient = await fetchClient(id);
+      client.value = fetchedClient;
     } catch (error) {
       handleValidationError(error);
       if (errorMessage.value) {
-        showErrorNotification('Error al guardar los datos', errorMessage.value);
+        showErrorNotification('Error al cargar el cliente', errorMessage.value);
       }
-      return false;
     } finally {
       isLoading.value = false;
     }
   }
 
-  return { client, isLoading, errors, handleSubmit, validateClient };
+  async function handleSubmit() {
+    isLoading.value = true;
+    errors.value = {};
+    try {
+      if (isEditing.value) {
+        await updateClient(client.value.id, client.value);
+        showSuccessNotification('Éxito', 'Cliente actualizado correctamente');
+      } else {
+        await createClient(client.value);
+        showSuccessNotification('Éxito', 'Cliente creado correctamente');
+      }
+      router.push('/clientes');
+    } catch (error) {
+      handleValidationError(error);
+      if (errorMessage.value) {
+        showErrorNotification('Error al guardar el cliente', errorMessage.value);
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  return { client, isEditing, isLoading, errors, handleSubmit, loadClient };
 }
