@@ -3,10 +3,16 @@
     <div class="container mx-auto p-6">
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">Gestión de Clientes</h1>
-        <v-btn color="primary" @click="goToCreate">
-          <i class="fas fa-plus mr-2"></i>
-          Nuevo Cliente
-        </v-btn>
+        <div class="flex items-center space-x-2">
+          <ClientSearch 
+            :model-value="searchQuery"
+            @update:model-value="updateSearch"
+          />
+          <v-btn color="primary" @click="goToCreate">
+            <i class="fas fa-plus mr-2"></i>
+            Nuevo Cliente
+          </v-btn>
+        </div>
       </div>
 
       <v-data-table
@@ -43,8 +49,10 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import { useClientManager } from '@/composables/useClientManager';
 import AdminWrapper from '@/components/AdminWrapper.vue';
+import ClientSearch from '@/components/clients/ClientSearch.vue';
 
 definePageMeta({
     requiresAuth: true,
@@ -53,6 +61,23 @@ definePageMeta({
     icon: 'mdi-account-group'
 });
 
+const searchQuery = ref('');
+
 // Extraemos la lógica del composable
-const { clients, isLoading, headers, handleDelete, goToCreate, goToEdit } = useClientManager();
+const { clients, isLoading, headers, loadClients, handleDelete, goToCreate, goToEdit } = useClientManager();
+
+// Función para manejar cambios en la búsqueda
+function updateSearch(value: string): void {
+  searchQuery.value = value;
+  handleSearch(value);
+}
+
+// Función para realizar la búsqueda
+function handleSearch(value: string): void {
+  loadClients(value);
+}
+
+onMounted(() => {
+  loadClients(searchQuery.value);
+});
 </script> 

@@ -31,10 +31,10 @@ export function useClientManager() {
   ];
 
   // Función para cargar los clientes.
-  async function loadClients() {
+  async function loadClients(search = '') {
     try {
       isLoading.value = true;
-      clients.value = await fetchClients();
+      clients.value = await fetchClients(search);
     } catch (error) {
       handleValidationError(error);
       if (errorMessage.value) {

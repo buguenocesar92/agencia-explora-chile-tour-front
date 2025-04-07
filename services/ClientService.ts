@@ -4,9 +4,13 @@ import type { ClientPayload } from '@/types/ClientTypes';
 /**
  * Obtiene todos los clientes.
  */
-export async function fetchClients(): Promise<ClientPayload[]> {
+export async function fetchClients(search?: string): Promise<ClientPayload[]> {
   const { $axios } = useNuxtApp();
-  const response = await $axios.get('/clients');
+  const response = await $axios.get('/clients', {
+    params: {
+      search: search || undefined
+    }
+  });
   return response.data;
 }
 
