@@ -20,11 +20,50 @@
             <p class="text-blue-100 text-lg max-w-2xl">
               Administra tus reservas, revisa estadísticas y gestiona toda la información de tus clientes desde este panel.
             </p>
-            <div class="mt-6">
+            <div class="mt-6 flex flex-wrap gap-3">
               <router-link to="/reservas" class="inline-flex items-center bg-white text-blue-600 font-medium px-5 py-2 rounded-lg hover:bg-blue-50 transition-colors">
                 <v-icon left size="small" class="mr-2">mdi-calendar-check</v-icon>
                 Ver reservas recientes
               </router-link>
+              
+              <button @click="refreshData" class="inline-flex items-center bg-blue-700 text-white font-medium px-5 py-2 rounded-lg hover:bg-blue-800 transition-colors">
+                <v-icon left size="small" class="mr-2">mdi-refresh</v-icon>
+                Actualizar datos
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Notificaciones -->
+      <div v-if="notifications.length > 0" class="mb-8 bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-amber-500">
+        <div class="px-6 py-4 bg-amber-50 border-b flex justify-between items-center">
+          <h3 class="font-bold text-gray-800 flex items-center">
+            <v-icon color="amber-darken-2" class="mr-2">mdi-bell</v-icon>
+            Notificaciones Pendientes
+          </h3>
+          <button class="text-amber-600 hover:text-amber-800 text-sm font-medium">
+            Marcar todas como leídas
+          </button>
+        </div>
+        <div class="p-4">
+          <div v-for="(notification, index) in notifications" :key="index" 
+               class="py-3 px-4 rounded-lg mb-2 last:mb-0"
+               :class="notification.type === 'warning' ? 'bg-amber-50' : 'bg-blue-50'">
+            <div class="flex items-start">
+              <div class="mt-1 mr-3">
+                <v-icon :color="notification.type === 'warning' ? 'amber-darken-2' : 'blue-darken-2'" size="small">
+                  {{ notification.type === 'warning' ? 'mdi-alert-circle' : 'mdi-information' }}
+                </v-icon>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-medium text-gray-800">{{ notification.title }}</h4>
+                <p class="text-sm text-gray-600">{{ notification.message }}</p>
+                <div class="flex items-center mt-2">
+                  <span class="text-xs text-gray-500">{{ notification.time }}</span>
+                  <button class="ml-4 text-xs text-blue-600 hover:text-blue-800">Ver detalle</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -96,9 +135,43 @@
           </p>
         </div>
       </div>
+      
+      <!-- Gráfico de rendimiento -->
+      <div class="mb-8 bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
+          <h3 class="font-bold text-gray-800">Rendimiento Mensual</h3>
+          <div class="flex space-x-2">
+            <select v-model="chartPeriod" class="text-sm border border-gray-300 rounded-lg px-3 py-1">
+              <option value="week">Última semana</option>
+              <option value="month">Último mes</option>
+              <option value="year">Último año</option>
+            </select>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="h-72">
+            <!-- Gráfico simulado -->
+            <div class="h-full w-full flex items-end justify-between px-6 pt-6 border-b border-l">
+              <div v-for="(item, index) in performanceData" :key="index" class="flex flex-col items-center">
+                <div class="w-12 rounded-t-lg bg-blue-500 opacity-80 hover:opacity-100 transition-all"
+                     :style="{ height: `${item.value}%` }"></div>
+                <span class="text-xs text-gray-600 mt-2">{{ item.label }}</span>
+              </div>
+            </div>
+            
+            <!-- Leyenda -->
+            <div class="flex justify-center mt-4 space-x-6">
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                <span class="text-sm text-gray-600">Reservas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <!-- Secciones -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Secciones divididas -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <!-- Reservas Recientes -->
         <div class="bg-white rounded-xl shadow-md overflow-hidden lg:col-span-2">
           <div class="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
@@ -186,6 +259,60 @@
           </div>
         </div>
       </div>
+      
+      <!-- Fila final con 2 columnas -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Próximas Actividades -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
+            <h3 class="font-bold text-gray-800">Próximas Actividades</h3>
+            <div class="text-sm">
+              <span class="text-blue-600 cursor-pointer">Hoy</span> | 
+              <span class="text-gray-500 cursor-pointer">Esta semana</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="space-y-4">
+              <div v-for="(activity, index) in upcomingActivities" :key="index" 
+                   class="flex items-start border-l-2 pl-4 py-2"
+                   :class="getActivityBorderClass(activity.type)">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="font-medium text-gray-800">{{ activity.title }}</h4>
+                    <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">{{ activity.time }}</span>
+                  </div>
+                  <p class="text-sm text-gray-600 mt-1">{{ activity.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Destinos Populares -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="px-6 py-4 bg-gray-50 border-b">
+            <h3 class="font-bold text-gray-800">Destinos Populares</h3>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div v-for="(destination, index) in popularDestinations" :key="index" 
+                   class="rounded-xl overflow-hidden border border-gray-200 hover:shadow-md transition-shadow relative group">
+                <div class="h-32 overflow-hidden">
+                  <img :src="destination.image" :alt="destination.name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent opacity-70"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-4">
+                  <h4 class="text-white font-bold">{{ destination.name }}</h4>
+                  <div class="flex justify-between items-center mt-1">
+                    <span class="text-white/90 text-sm">{{ destination.bookings }} reservas</span>
+                    <span class="text-yellow-400 text-sm flex">★★★★★</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </AdminWrapper>
 </template>
@@ -204,6 +331,7 @@ definePageMeta({
 
 const authStore = useAuthStore();
 const username = ref('Administrador');
+const chartPeriod = ref('month');
 
 // Datos de ejemplo para estadísticas
 const stats = ref({
@@ -241,6 +369,79 @@ const recentReservations = ref([
   }
 ]);
 
+// Datos de ejemplo para el gráfico de rendimiento
+const performanceData = ref([
+  { label: 'Ene', value: 65 },
+  { label: 'Feb', value: 59 },
+  { label: 'Mar', value: 80 },
+  { label: 'Abr', value: 81 },
+  { label: 'May', value: 56 },
+  { label: 'Jun', value: 55 },
+  { label: 'Jul', value: 40 }
+]);
+
+// Datos de ejemplo para próximas actividades
+const upcomingActivities = ref([
+  {
+    title: 'Reunión con guía turístico',
+    description: 'Discusión sobre nuevos tours en Torres del Paine',
+    time: '10:00 AM',
+    type: 'meeting'
+  },
+  {
+    title: 'Pago de reserva pendiente',
+    description: 'Recordatorio para cliente Juan Pérez',
+    time: '12:30 PM',
+    type: 'payment'
+  },
+  {
+    title: 'Inicio de tour',
+    description: 'Grupo de 5 personas a Isla de Pascua',
+    time: '3:00 PM',
+    type: 'tour'
+  }
+]);
+
+// Datos de ejemplo para notificaciones
+const notifications = ref([
+  {
+    title: 'Pago pendiente',
+    message: 'La reserva de Juan Pérez tiene un pago pendiente que vence hoy.',
+    time: 'Hace 30 minutos',
+    type: 'warning'
+  },
+  {
+    title: 'Nueva reserva',
+    message: 'Se ha registrado una nueva reserva para el tour de Torres del Paine.',
+    time: 'Hace 2 horas',
+    type: 'info'
+  }
+]);
+
+// Datos de ejemplo para destinos populares
+const popularDestinations = ref([
+  {
+    name: 'Torres del Paine',
+    bookings: 48,
+    image: 'https://images.unsplash.com/photo-1619464953795-eb33627133fc?q=80&w=800&auto=format&fit=crop'
+  },
+  {
+    name: 'Isla de Pascua',
+    bookings: 42,
+    image: 'https://images.unsplash.com/photo-1596443822985-04238c1ca755?q=80&w=800&auto=format&fit=crop'
+  },
+  {
+    name: 'Desierto de Atacama',
+    bookings: 36,
+    image: 'https://images.unsplash.com/photo-1519248494489-1e9f5586bf85?q=80&w=800&auto=format&fit=crop'
+  },
+  {
+    name: 'Valparaíso',
+    bookings: 29,
+    image: 'https://images.unsplash.com/photo-1605714043035-f5c64a88d145?q=80&w=800&auto=format&fit=crop'
+  }
+]);
+
 // Obtener el nombre de usuario actual
 onMounted(() => {
   if (authStore.isAuthenticated && authStore.name) {
@@ -262,5 +463,27 @@ function getStatusClass(status: string) {
     default:
       return 'bg-gray-100 text-gray-800';
   }
+}
+
+// Función para asignar clases de borde según el tipo de actividad
+function getActivityBorderClass(type: string) {
+  switch (type) {
+    case 'meeting':
+      return 'border-blue-500';
+    case 'payment':
+      return 'border-green-500';
+    case 'tour':
+      return 'border-amber-500';
+    default:
+      return 'border-gray-300';
+  }
+}
+
+// Función para actualizar datos
+function refreshData() {
+  // Aquí iría la lógica para actualizar los datos desde la API
+  // Por ahora solo simularemos un cambio
+  stats.value.reservations += 2;
+  stats.value.clients += 1;
 }
 </script>
