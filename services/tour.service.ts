@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { API_URL } from '@/config/constants';
+import { useNuxtApp } from '#app';
 
 /**
  * Servicio para manejar las operaciones relacionadas con tours
@@ -11,8 +10,9 @@ export class TourService {
    */
   static async getAllTours() {
     try {
-      console.log('Obteniendo tours desde:', `${API_URL}/tours`);
-      const response = await axios.get(`${API_URL}/tours`);
+      const { $axios } = useNuxtApp();
+      console.log('Obteniendo tours...');
+      const response = await $axios.get('/tours');
       return response.data;
     } catch (error) {
       console.error('Error al obtener tours:', error);
@@ -27,8 +27,9 @@ export class TourService {
    */
   static async getTourDates(tourId: string) {
     try {
-      console.log('Obteniendo fechas desde:', `${API_URL}/tours/${tourId}/dates`);
-      const response = await axios.get(`${API_URL}/tours/${tourId}/dates`);
+      const { $axios } = useNuxtApp();
+      console.log(`Obteniendo fechas para el tour ${tourId}...`);
+      const response = await $axios.get(`/tours/${tourId}/dates`);
       return response.data;
     } catch (error) {
       console.error(`Error al obtener fechas para el tour ${tourId}:`, error);
@@ -43,8 +44,9 @@ export class TourService {
    */
   static async getTourById(tourId: string) {
     try {
-      console.log('Obteniendo detalles desde:', `${API_URL}/tours/${tourId}`);
-      const response = await axios.get(`${API_URL}/tours/${tourId}`);
+      const { $axios } = useNuxtApp();
+      console.log(`Obteniendo detalles del tour ${tourId}...`);
+      const response = await $axios.get(`/tours/${tourId}`);
       return response.data;
     } catch (error) {
       console.error(`Error al obtener detalles del tour ${tourId}:`, error);
