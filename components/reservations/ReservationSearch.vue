@@ -1,18 +1,19 @@
 <template>
   <v-text-field
-    :value="modelValue"
+    v-model="localValue"
     label="Buscar por nombre o RUT"
     prepend-inner-icon="mdi-magnify"
     clearable
     outlined
     dense
     class="max-w-md"
-    @update:model-value="handleSearchInput"
+    :loading="isDebouncing"
   ></v-text-field>
 </template>
 
 <script setup lang="ts">
 import { useDebounceFn } from '@vueuse/core';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   modelValue: {
@@ -26,12 +27,26 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
 }>();
 
-// Debounce with cancelation
+// Estado local para indicar si estamos en espera de debounce
+const isDebouncing = ref(false);
+const localValue = ref(props.modelValue);
+
+// Aumentar el tiempo de debounce a 800ms para permitir una escritura más fluida
 const debouncedSearch = useDebounceFn((value: string) => {
   emit('update:modelValue', value);
-}, 300);
+  isDebouncing.value = false;
+}, 800);
 
-function handleSearchInput(value: string): void {
-  debouncedSearch(value);
-}
+// Observar cambios en el valor local y aplicar debounce
+watch(localValue, (newValue) => {
+  isDebouncing.value = true;
+  debouncedSearch(newValue);
+});
+
+// Sincronizar el valor local cuando cambia la prop modelValue
+watch(() => props.modelValue, (newValue) => {
+  if (newValue !== localValue.value) {
+    localValue.value = newValue;
+  }
+});
 </script> 
