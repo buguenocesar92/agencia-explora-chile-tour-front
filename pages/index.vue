@@ -1,151 +1,300 @@
 <template>
   <div>
-    <Navbar bgColor="bg-gradient-to-r from-sky-600 to-teal-500" />
-    <div class="hero-section relative overflow-hidden">
-      <div class="absolute inset-0 bg-cover bg-center z-0" 
-           style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80');
-                  filter: brightness(0.7);">
+    <Navbar bgColor="bg-gradient-to-r from-[#7ac142] to-[#1e73be]" />
+    
+    <!-- Modal de Reserva -->
+    <ReservationModal v-model="showReservationModal" @start-reservation="goToWizard" />
+    
+    <!-- Call to Action modernizado - Diseño tipo popup -->
+    <section class="py-20 relative overflow-hidden">
+      <!-- Imagen de fondo (playa) -->
+      <div class="absolute inset-0 bg-cover bg-center" 
+           style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2073&q=80'); filter: brightness(0.8);">
       </div>
-      <v-container class="py-20 relative z-10 mt-12">
-<!--         <div class="text-center text-white mb-12">
-          <h1 class="text-5xl font-bold mb-4">Descubre el mundo con nosotros</h1>
-          <p class="text-xl max-w-2xl mx-auto">Experiencias únicas y destinos inolvidables para tus vacaciones perfectas</p>
-        </div> -->
-        <div class="flex justify-center mt-12">
-          <v-card class="reservation-card px-0 py-0 rounded-xl overflow-hidden" max-width="500" elevation="15">
-            <div class="card-header bg-gradient-to-r from-teal-600 to-cyan-500 py-6 px-8 relative">
-              <div class="absolute top-0 right-0 w-32 h-32">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="opacity-20">
-                  <path fill="#FFFFFF" d="M39.9,-65.7C51.5,-58.4,60.8,-47.8,67.2,-35.4C73.6,-23,77.1,-8.9,75.8,4.7C74.5,18.3,68.5,31.3,59.8,42.1C51.1,52.9,39.8,61.5,27.1,67.4C14.4,73.3,0.4,76.5,-14.8,76.1C-30,75.7,-46.4,71.7,-57.6,62C-68.8,52.3,-74.8,37,-78.8,21.2C-82.8,5.4,-84.8,-10.9,-79.9,-24.8C-75,-38.7,-63.2,-50.2,-49.7,-57.1C-36.2,-64,-18.1,-66.3,-1.7,-63.8C14.7,-61.3,28.3,-73,39.9,-65.7Z" transform="translate(100 100)" />
-                </svg>
-              </div>
-              <div class="flex items-center mb-3">
-                <div class="bg-white p-2 rounded-full mr-3">
-                  <v-icon color="teal-darken-2" size="large">mdi-compass</v-icon>
-                </div>
-                <h2 class="text-3xl font-bold text-white">Reserva tu Aventura</h2>
-              </div>
-              <p class="text-teal-50 text-lg relative z-10">Comienza el viaje de tus sueños hoy mismo</p>
-            </div>
-            
-            <div class="card-body px-8 py-6">
-              <div class="destination-selector mb-6">
-                <p class="text-gray-600 mb-4">Selecciona tu próximo destino:</p>
-                <div class="grid grid-cols-2 gap-3 mb-4">
-                  <div class="destination-option flex items-center p-3 border border-gray-200 rounded-lg hover:border-teal-500 hover:bg-teal-50 cursor-pointer transition-all">
-                    <v-icon color="amber-darken-2" class="mr-2">mdi-beach</v-icon>
-                    <span class="font-medium text-gray-800">Playas</span>
-                  </div>
-                  <div class="destination-option flex items-center p-3 border border-gray-200 rounded-lg hover:border-teal-500 hover:bg-teal-50 cursor-pointer transition-all">
-                    <v-icon color="green-darken-1" class="mr-2">mdi-pine-tree</v-icon>
-                    <span class="font-medium text-gray-800">Montañas</span>
-                  </div>
-                  <div class="destination-option flex items-center p-3 border border-gray-200 rounded-lg hover:border-teal-500 hover:bg-teal-50 cursor-pointer transition-all">
-                    <v-icon color="blue-darken-1" class="mr-2">mdi-city-variant</v-icon>
-                    <span class="font-medium text-gray-800">Ciudades</span>
-                  </div>
-                  <div class="destination-option flex items-center p-3 border border-gray-200 rounded-lg hover:border-teal-500 hover:bg-teal-50 cursor-pointer transition-all">
-                    <v-icon color="deep-orange" class="mr-2">mdi-map-marker-radius</v-icon>
-                    <span class="font-medium text-gray-800">Exóticos</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="travel-benefits mb-6">
-                <div class="flex items-center mb-3">
-                  <v-icon color="teal" size="small" class="mr-2">mdi-check-circle</v-icon>
-                  <span class="text-gray-700">Reserva sin cargos de cancelación</span>
-                </div>
-                <div class="flex items-center mb-3">
-                  <v-icon color="teal" size="small" class="mr-2">mdi-check-circle</v-icon>
-                  <span class="text-gray-700">Asistencia 24/7 durante tu viaje</span>
-                </div>
-                <div class="flex items-center">
-                  <v-icon color="teal" size="small" class="mr-2">mdi-check-circle</v-icon>
-                  <span class="text-gray-700">Mejores precios garantizados</span>
-                </div>
-              </div>
-              
-              <div class="cta-section">
-                <v-btn 
-                  block
-                  color="teal-darken-2" 
-                  @click="goToWizard" 
-                  size="x-large"
-                  class="py-3 text-white font-medium text-lg relative overflow-hidden"
-                  elevation="3">
-                  <span class="relative z-10">Iniciar Mi Reserva</span>
-                  <span class="absolute inset-0 bg-gradient-to-r from-teal-600 to-cyan-500 opacity-0 hover:opacity-100 transition-opacity"></span>
-                  <v-icon class="ml-2">mdi-arrow-right</v-icon>
-                </v-btn>
-                <p class="text-center text-gray-500 text-sm mt-4">
-                  <v-icon size="x-small" class="mr-1">mdi-shield-check</v-icon>
-                  Pago seguro y protección de datos garantizada
-                </p>
-              </div>
-            </div>
-            
-            <div class="card-footer bg-gray-50 px-8 py-4 border-t border-gray-100">
-              <div class="flex justify-between items-center">
-                <div class="flex items-center">
-                  <v-icon color="amber" size="small" class="mr-1">mdi-star</v-icon>
-                  <v-icon color="amber" size="small" class="mr-1">mdi-star</v-icon>
-                  <v-icon color="amber" size="small" class="mr-1">mdi-star</v-icon>
-                  <v-icon color="amber" size="small" class="mr-1">mdi-star</v-icon>
-                  <v-icon color="amber" size="small" class="mr-1">mdi-star-half</v-icon>
-                  <span class="text-gray-600 text-sm ml-1">4.8/5 (2,345 reseñas)</span>
-                </div>
-                <div>
-                  <span class="text-xs text-gray-500">Más de 10,000 viajeros satisfechos</span>
-                </div>
-              </div>
-            </div>
-          </v-card>
+      
+      <!-- Overlay azul con gradiente -->
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 opacity-80"></div>
+      
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <h2 class="text-4xl font-bold mb-6 text-white">¿Listo para vivir una aventura?</h2>
+          <p class="text-xl text-white/90 mb-10">Contacta con nosotros hoy y comienza a planificar tu próximo viaje inolvidable por Chile.</p>
+          
+          <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+            <button 
+              @click="showReservationModal = true" 
+              class="px-8 py-4 bg-white text-blue-700 font-bold rounded-lg hover:bg-blue-50 transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+              Reservar ahora
+            </button>
+            <router-link 
+              to="/contacto" 
+              class="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-all duration-300 text-center">
+              Más información
+            </router-link>
+          </div>
         </div>
-      </v-container>
-    </div>
-    <div class="features py-16 bg-gray-50">
-      <v-container>
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Nuestros Servicios Premium</h2>
+      </div>
+    </section>
+
+    <!-- Galería de destinos modernizada -->
+    <section class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold mb-4 text-gray-800">Descubre Chile</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">Explora los destinos más increíbles de Chile a través de nuestra galería de imágenes de lugares impresionantes</p>
+        </div>
+        
+        <!-- Carrusel de imágenes moderno -->
+        <div class="relative overflow-hidden rounded-2xl shadow-2xl h-[600px]">
+          <!-- Indicadores -->
+          <div class="absolute bottom-6 left-0 right-0 z-10 flex justify-center space-x-2">
+            <button 
+              v-for="(image, i) in galleryImages" 
+              :key="i" 
+              @click="currentSlide = i"
+              :class="[
+                'w-3 h-3 rounded-full transition-all duration-300',
+                currentSlide === i ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/80'
+              ]"
+            ></button>
+          </div>
+          
+          <!-- Imágenes -->
+          <div 
+            v-for="(image, i) in galleryImages" 
+            :key="i"
+            class="absolute inset-0 transition-opacity duration-700 ease-in-out"
+            :class="{ 'opacity-100': currentSlide === i, 'opacity-0': currentSlide !== i }"
+          >
+            <img 
+              :src="image.src" 
+              :alt="image.title"
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-10 text-white">
+              <h3 class="text-3xl font-bold mb-3">{{ image.title }}</h3>
+              <p class="text-white/90 text-lg max-w-2xl">{{ image.description }}</p>
+            </div>
+          </div>
+          
+          <!-- Controles -->
+          <button 
+            class="absolute top-1/2 left-4 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-3 backdrop-blur-sm transition-all duration-300 hover:scale-110 z-10"
+            @click="prevSlide"
+          >
+            <v-icon>mdi-chevron-left</v-icon>
+          </button>
+          <button 
+            class="absolute top-1/2 right-4 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-3 backdrop-blur-sm transition-all duration-300 hover:scale-110 z-10"
+            @click="nextSlide"
+          >
+            <v-icon>mdi-chevron-right</v-icon>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Servicios modernizados -->
+    <section class="py-20">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold mb-4 text-gray-800">Nuestros Servicios</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">Ofrecemos experiencias únicas adaptadas a cada tipo de viajero, con atención personalizada y los mejores guías locales</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="bg-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 group">
+            <div class="h-56 overflow-hidden relative">
+              <img src="https://picsum.photos/id/10/800/600" alt="Tours Guiados" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
+              <div class="absolute top-4 right-4 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Más popular</div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-3 text-gray-800 flex items-center">
+                <v-icon color="blue-600" class="mr-2">mdi-map-marker-path</v-icon>
+                Tours Guiados
+              </h3>
+              <p class="text-gray-600 mb-4">Exploración con expertos que te mostrarán los secretos y la historia detrás de cada lugar emblemático de Chile.</p>
+              <router-link to="/servicios/tours" class="text-blue-600 font-medium flex items-center hover:text-blue-800 transition-colors duration-300">
+                Descubrir más
+                <v-icon size="small" class="ml-1">mdi-arrow-right</v-icon>
+              </router-link>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 group">
+            <div class="h-56 overflow-hidden relative">
+              <img src="https://picsum.photos/id/26/800/600" alt="Experiencias Personalizadas" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-3 text-gray-800 flex items-center">
+                <v-icon color="blue-600" class="mr-2">mdi-star-circle</v-icon>
+                Experiencias Personalizadas
+              </h3>
+              <p class="text-gray-600 mb-4">Itinerarios adaptados a tus intereses, tiempo y presupuesto para que vivas Chile a tu manera.</p>
+              <router-link to="/servicios/experiencias" class="text-blue-600 font-medium flex items-center hover:text-blue-800 transition-colors duration-300">
+                Descubrir más
+                <v-icon size="small" class="ml-1">mdi-arrow-right</v-icon>
+              </router-link>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 group">
+            <div class="h-56 overflow-hidden relative">
+              <img src="https://picsum.photos/id/28/800/600" alt="Aventuras Extremas" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-3 text-gray-800 flex items-center">
+                <v-icon color="blue-600" class="mr-2">mdi-hiking</v-icon>
+                Aventuras Extremas
+              </h3>
+              <p class="text-gray-600 mb-4">Adrenalina pura en los escenarios naturales más impresionantes del país, con todas las medidas de seguridad.</p>
+              <router-link to="/servicios/aventuras" class="text-blue-600 font-medium flex items-center hover:text-blue-800 transition-colors duration-300">
+                Descubrir más
+                <v-icon size="small" class="ml-1">mdi-arrow-right</v-icon>
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonios modernizados -->
+    <section class="py-20 bg-blue-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold mb-4 text-gray-800">Lo Que Dicen Nuestros Viajeros</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">Descubre por qué cientos de viajeros eligen nuestros servicios para explorar Chile</p>
+        </div>
+        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="feature-card p-6 bg-white rounded-lg shadow-md text-center">
-            <v-icon color="teal-darken-1" size="x-large" class="mb-4">mdi-airplane-takeoff</v-icon>
-            <h3 class="text-xl font-semibold mb-2 text-teal-800">Vuelos Internacionales</h3>
-            <p class="text-gray-600">Las mejores tarifas y conexiones para tu destino soñado</p>
+          <div class="bg-white p-8 rounded-xl shadow-lg">
+            <div class="flex items-center mb-6">
+              <div class="text-yellow-400 text-xl flex -ml-1">★★★★★</div>
+            </div>
+            <p class="text-gray-700 mb-6 italic">"Nuestro viaje a Torres del Paine fue simplemente perfecto. Gracias a Explora Chile, pudimos disfrutar de cada momento sin preocupaciones. Los guías eran excepcionales."</p>
+            <div class="flex items-center">
+              <img src="https://randomuser.me/api/portraits/women/62.jpg" alt="Cliente" class="w-12 h-12 rounded-full object-cover mr-4" />
+              <div>
+                <h4 class="text-gray-800 font-bold">María González</h4>
+                <p class="text-gray-500 text-sm">Madrid, España</p>
+              </div>
+            </div>
           </div>
-          <div class="feature-card p-6 bg-white rounded-lg shadow-md text-center">
-            <v-icon color="teal-darken-1" size="x-large" class="mb-4">mdi-hotel</v-icon>
-            <h3 class="text-xl font-semibold mb-2 text-teal-800">Hoteles de Lujo</h3>
-            <p class="text-gray-600">Alojamientos seleccionados para una experiencia inolvidable</p>
+          
+          <div class="bg-white p-8 rounded-xl shadow-lg md:transform md:translate-y-6">
+            <div class="flex items-center mb-6">
+              <div class="text-yellow-400 text-xl flex -ml-1">★★★★★</div>
+            </div>
+            <p class="text-gray-700 mb-6 italic">"El desierto de Atacama me dejó sin palabras. La planificación del viaje fue perfecta y el conocimiento de los guías fue impresionante. ¡100% recomendado!"</p>
+            <div class="flex items-center">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Cliente" class="w-12 h-12 rounded-full object-cover mr-4" />
+              <div>
+                <h4 class="text-gray-800 font-bold">Carlos Rodríguez</h4>
+                <p class="text-gray-500 text-sm">Buenos Aires, Argentina</p>
+              </div>
+            </div>
           </div>
-          <div class="feature-card p-6 bg-white rounded-lg shadow-md text-center">
-            <v-icon color="teal-darken-1" size="x-large" class="mb-4">mdi-map-search</v-icon>
-            <h3 class="text-xl font-semibold mb-2 text-teal-800">Tours Exclusivos</h3>
-            <p class="text-gray-600">Experiencias únicas con guías locales expertos</p>
+          
+          <div class="bg-white p-8 rounded-xl shadow-lg">
+            <div class="flex items-center mb-6">
+              <div class="text-yellow-400 text-xl flex -ml-1">★★★★★</div>
+            </div>
+            <p class="text-gray-700 mb-6 italic">"Mi familia y yo disfrutamos enormemente de nuestro tour por la Isla de Pascua. Todo estuvo meticulosamente organizado y la experiencia cultural fue enriquecedora."</p>
+            <div class="flex items-center">
+              <img src="https://randomuser.me/api/portraits/women/42.jpg" alt="Cliente" class="w-12 h-12 rounded-full object-cover mr-4" />
+              <div>
+                <h4 class="text-gray-800 font-bold">Ana Martínez</h4>
+                <p class="text-gray-500 text-sm">México DF, México</p>
+              </div>
+            </div>
           </div>
         </div>
-      </v-container>
-    </div>
+      </div>
+    </section>
+
     <FooterComponent />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import Navbar from "@/components/Navbars/AuthNavbar.vue";
 import FooterComponent from "@/components/Footers/Footer.vue";
+import ReservationModal from "@/components/ReservationModal.vue";
 
 const router = useRouter();
+const showReservationModal = ref(false);
 
+// Imágenes del carrusel con rutas a las nuevas imágenes
+const galleryImages = ref([
+  { 
+    src: '/img/gallery/moai-isla.jpg', 
+    title: 'Isla de Pascua', 
+    description: 'Descubre los enigmáticos Moai y la fascinante cultura Rapa Nui en la remota Isla de Pascua.'
+  },
+  { 
+    src: '/img/gallery/torres-paine-new.jpg',
+    title: 'Torres del Paine', 
+    description: 'Explora los impresionantes paisajes del Parque Nacional Torres del Paine en la Patagonia chilena.'
+  },
+  { 
+    src: '/img/gallery/atacama-new.jpg',
+    title: 'Desierto de Atacama', 
+    description: 'Recorre el desierto más árido del mundo con sus increíbles formaciones geológicas y cielos estrellados.'
+  },
+  { 
+    src: '/img/gallery/valparaiso-new.jpg',
+    title: 'Valparaíso', 
+    description: 'Disfruta de los coloridos cerros de esta ciudad costera, Patrimonio de la Humanidad.'
+  }
+]);
+
+// Control del carrusel modernizado
+const currentSlide = ref(0);
+
+// Funciones para controlar el carrusel
+function nextSlide() {
+  currentSlide.value = (currentSlide.value + 1) % galleryImages.value.length;
+}
+
+function prevSlide() {
+  currentSlide.value = (currentSlide.value - 1 + galleryImages.value.length) % galleryImages.value.length;
+}
+
+// Auto-rotación del carrusel
+let slideInterval: ReturnType<typeof setInterval> | undefined;
+
+onMounted(() => {
+  // Iniciar auto-rotación
+  startSlideShow();
+});
+
+function startSlideShow() {
+  stopSlideShow(); // Asegurarse de que no hay múltiples intervalos
+  slideInterval = setInterval(() => {
+    nextSlide();
+  }, 5000); // Cambiar cada 5 segundos
+}
+
+function stopSlideShow() {
+  if (slideInterval) {
+    clearInterval(slideInterval);
+  }
+}
+
+// Función para ir al wizard de reservas
 function goToWizard() {
-  // Redirige a la ruta del wizard, ajústala según tu configuración
   router.push('/wizard');
 }
 </script>
 
 <style scoped>
 .hero-section {
-  min-height: 80vh;
+  min-height: 90vh;
   display: flex;
   align-items: center;
 }
@@ -154,30 +303,41 @@ function goToWizard() {
   background-color: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   max-width: 500px;
 }
 
 .reservation-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
 }
 
 .feature-card {
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
+  border-top: 4px solid #7ac142;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, #7ac142, #1e73be);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
-.destination-option {
-  transition: all 0.2s ease;
-}
-
-.destination-option:hover {
-  transform: translateY(-2px);
+.feature-card:hover::before {
+  transform: translateX(0);
 }
 
 .card-header {
@@ -192,7 +352,66 @@ function goToWizard() {
   right: -50%;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
   transform: rotate(30deg);
+}
+
+.travel-experiences .v-carousel {
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.carousel-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%);
+}
+
+.content-box {
+  animation: fadeIn 0.8s ease-in-out;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 15px rgba(122, 193, 66, 0.5);
+}
+
+.icon-wrapper {
+  transition: all 0.3s ease;
+}
+
+.benefit-item:hover .icon-wrapper {
+  transform: scale(1.1);
+}
+
+.animate-fadeDown {
+  animation: fadeDown 1s ease-out;
+}
+
+.animate-fadeUp {
+  animation: fadeUp 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  position: relative;
 }
 </style>

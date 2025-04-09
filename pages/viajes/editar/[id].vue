@@ -25,6 +25,7 @@
             type="date"
             class="w-full px-3 py-2 border rounded"
             :class="{ 'border-red-500': errors.departure_date }"
+            :min="today"
           />
           <p v-if="errors.departure_date" class="text-red-500 text-sm mt-1">
             {{ errors.departure_date[0] }}
@@ -38,6 +39,7 @@
             type="date"
             class="w-full px-3 py-2 border rounded"
             :class="{ 'border-red-500': errors.return_date }"
+            :min="trip.departure_date || today"
           />
           <p v-if="errors.return_date" class="text-red-500 text-sm mt-1">
             {{ errors.return_date[0] }}
@@ -70,6 +72,9 @@ definePageMeta({
 
 const route = useRoute();
 const { trip, isEditing, isLoading, errors, handleSubmit, loadTrip } = useTripForm();
+
+// Fecha actual en formato YYYY-MM-DD para los inputs de tipo date
+const today = ref(new Date().toISOString().split('T')[0]);
 
 // Cargar los tour templates para el select
 const tourTemplates = ref<TourTemplatePayload[]>([]);

@@ -1,15 +1,20 @@
 <template>
   <AdminWrapper>
     <div class="container mx-auto p-6">
-      <div class="flex justify-between items-center mb-6">
+      <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
         <h1 class="text-2xl font-bold">Gestión de Clientes</h1>
-        <div class="flex items-center space-x-2">
+        
+        <div class="flex flex-col sm:flex-row items-center gap-3">
           <ClientSearch 
             :model-value="searchQuery"
             @update:model-value="updateSearch"
           />
-          <v-btn color="primary" @click="goToCreate">
-            <i class="fas fa-plus mr-2"></i>
+          <v-btn 
+            color="primary" 
+            @click="goToCreate"
+            prepend-icon="fas fa-plus"
+            class="text-white px-4 py-2 h-10"
+          >
             Nuevo Cliente
           </v-btn>
         </div>
