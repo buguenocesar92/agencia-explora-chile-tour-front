@@ -9,6 +9,31 @@
         </v-btn>
       </div>
 
+      <!-- Filtro por tour template -->
+      <div class="mb-6 bg-white p-4 rounded-lg shadow-sm">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <div>
+            <label class="block text-gray-700 mb-2">Filtrar por Tour</label>
+            <FormSelect
+              id="tourTemplateFilter"
+              v-model="selectedTourTemplate"
+              :options="tourTemplateOptions"
+              placeholder="Todos los tours"
+              label="Tour"
+              @update:modelValue="filterTrips"
+            />
+          </div>
+          <div>
+            <button 
+              @click="resetFilters" 
+              class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
+            >
+              Limpiar filtros
+            </button>
+          </div>
+        </div>
+      </div>
+
       <v-data-table
         :headers="headers"
         :items="trips"
@@ -39,8 +64,12 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
 import AdminWrapper from '@/components/AdminWrapper.vue';
+import FormSelect from '@/components/FormSelect.vue';
 import { useTripManager } from '@/composables/useTripManager';
+import { fetchTourTemplates } from '@/services/TourTemplateService';
+import type { TourTemplatePayload } from '@/types/TourTemplateTypes';
 
 definePageMeta({
   requiresAuth: true,
@@ -50,5 +79,38 @@ definePageMeta({
 });
 
 // Extraemos la lógica del composable de gestión de viajes.
-const { trips, isLoading, headers, handleDelete, goToCreate, goToEdit } = useTripManager();
+const { trips, isLoading, headers, handleDelete, goToCreate, goToEdit, loadTrips } = useTripManager();
+
+// Estado para el filtro de tour template
+const selectedTourTemplate = ref();
+
+// Cargar los tour templates para el select
+const tourTemplates = ref<TourTemplatePayload[]>([]);
+const tourTemplateOptions = computed(() =>
+  tourTemplates.value.map(template => ({
+    id: template.id,
+    name: template.name
+  }))
+);
+
+// Función para aplicar filtros
+async function filterTrips() {
+  if (selectedTourTemplate.value) {
+    await loadTrips({ tour_template_id: Number(selectedTourTemplate.value) });
+  } else {
+    await loadTrips();
+  }
+}
+
+// Función para resetear filtros
+async function resetFilters() {
+  selectedTourTemplate.value = null;
+  await loadTrips(); // Cargar todos los viajes sin filtro
+}
+
+onMounted(async () => {
+  // Cargamos los tour templates y todos los viajes inicialmente
+  tourTemplates.value = await fetchTourTemplates();
+  await loadTrips();
+});
 </script>

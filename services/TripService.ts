@@ -5,9 +5,13 @@ import type { TripPayload } from '@/types/TripType';
 /**
  * Obtiene todos los viajes.
  */
-export async function fetchTrips(): Promise<TripPayload[]> {
+export async function fetchTrips(filters?: { tour_template_id?: number }): Promise<TripPayload[]> {
   const { $axios } = useNuxtApp();
-  const response = await $axios.get('/trips');
+  
+  // Si hay filtros, añadirlos como query params
+  const params = filters || {};
+  
+  const response = await $axios.get('/trips', { params });
   // Se asume que el endpoint retorna un objeto con la propiedad "trips"
   return response.data.trips || response.data;
 }

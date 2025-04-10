@@ -25,10 +25,10 @@ export function useTripManager() {
   ];
 
   // Función para cargar los viajes.
-  async function loadTrips() {
+  async function loadTrips(filters?: { tour_template_id?: number }) {
     try {
       isLoading.value = true;
-      trips.value = await fetchTrips();
+      trips.value = await fetchTrips(filters);
     } catch (error) {
       handleValidationError(error);
       if (errorMessage.value) {
