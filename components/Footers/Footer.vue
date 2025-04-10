@@ -86,7 +86,7 @@
           <ul class="space-y-3">
             <li class="flex items-start">
               <v-icon class="mr-2 mt-1 text-blue-300">mdi-map-marker</v-icon>
-              <span class="text-gray-200">Santiago, Chile</span>
+              <span class="text-gray-200">Rancagua, Chile</span>
             </li>
             <li class="flex items-center">
               <v-icon class="mr-2 text-blue-300">mdi-phone</v-icon>
