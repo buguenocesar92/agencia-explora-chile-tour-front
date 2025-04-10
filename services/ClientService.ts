@@ -29,24 +29,15 @@ export async function fetchClient(id: number): Promise<ClientPayload> {
 export async function fetchClientByRut(rut: string): Promise<ClientPayload | null> {
   try {
     const { $axios } = useNuxtApp();
-    const response = await $axios.get('/clients', {
+    
+    // Usar la ruta pública específica para búsqueda por RUT (no requiere autenticación)
+    const response = await $axios.get('/clients/search-by-rut', {
       params: { rut }
     });
     
-    // Verificar si se recibió una respuesta
-    if (response.data && Array.isArray(response.data)) {
-      // Normalizar el RUT de búsqueda (eliminar puntos y guiones)
-      const normalizedSearchRut = rut.replace(/[.-]/g, '');
-      
-      // Buscar el cliente que tenga exactamente el mismo RUT
-      const exactMatch = response.data.find(client => {
-        // Normalizar el RUT del cliente para comparación
-        const normalizedClientRut = client.rut.replace(/[.-]/g, '');
-        return normalizedClientRut === normalizedSearchRut;
-      });
-      
-      // Devolver el cliente con el RUT exacto o null si no hay coincidencia exacta
-      return exactMatch || null;
+    // Si la respuesta tiene datos, devolver el cliente
+    if (response.data) {
+      return response.data;
     }
     
     return null;

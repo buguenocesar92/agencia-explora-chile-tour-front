@@ -1,20 +1,26 @@
 <template>
   <div>
-    <Navbar bgColor="bg-gradient-to-r from-[#7ac142] to-[#1e73be]" />
+    <Navbar bgColor="bg-gradient-to-r from-blue-600 to-blue-800" v-if="false" />
     
-    <div class="wizard-container py-16 bg-gray-50 min-h-screen relative">
-      <!-- Imagen de fondo -->
+    <div class="wizard-container py-16 min-h-screen relative">
+      <!-- Imagen de fondo (bg.webp) -->
       <div class="absolute inset-0 bg-cover bg-center bg-fixed" 
-           style="background-image: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); 
-                  filter: brightness(0.85);">
-        <div class="absolute inset-0 bg-blue-900/30 backdrop-blur-sm"></div>
+           style="background-image: url('/bg.webp'); filter: brightness(0.8);">
       </div>
+      
+      <!-- Overlay azul con gradiente -->
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 opacity-80"></div>
       
       <div class="container mx-auto px-4 relative z-10">
         <div class="max-w-4xl mx-auto">
-          <div class="reservation-wizard bg-white/95 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+          <!-- Logo -->
+          <div class="flex justify-center mb-8">
+            <img src="/logo.png" alt="Explora Chiletour" class="h-24 mb-2" />
+          </div>
+          
+          <div class="reservation-wizard bg-white/90 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl border border-white/20">
             <!-- Header con decoración -->
-            <div class="wizard-header bg-gradient-to-r from-[#7ac142] to-[#1e73be] py-10 px-8 relative">
+            <div class="wizard-header bg-gradient-to-r from-blue-600 to-blue-800 py-10 px-8 relative">
               <!-- Forma decorativa -->
               <div class="absolute top-8 right-8 w-32 h-32 opacity-20">
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -23,15 +29,15 @@
               </div>
               <div class="flex items-center mb-4">
                 <div class="bg-white p-3 rounded-full mr-4 shadow-md">
-                  <v-icon color="#7ac142" size="large">mdi-leaf</v-icon>
+                  <v-icon color="blue-600" size="large">mdi-leaf</v-icon>
                 </div>
                 <div>
-                  <h1 class="text-3xl font-bold text-white">Reserva tu Aventura</h1>
-                  <p class="text-white text-md mt-1 opacity-90">Descubre Chile con nosotros</p>
+                  <h1 class="text-3xl font-bold text-white">Tu mejor viaje comienza aquí</h1>
+                  <p class="text-white text-md mt-1 opacity-90">Viajes grupales por Chile y el mundo 🌎</p>
                 </div>
               </div>
               <p class="text-white text-lg relative z-10 font-light">
-                Completa los siguientes pasos para personalizar y confirmar tu próxima aventura
+                Completa los siguientes datos para reservar tu próxima experiencia inolvidable
               </p>
             </div>
             
@@ -98,7 +104,7 @@
                 <div class="navigation-buttons flex flex-wrap gap-3 ml-auto">
                   <button
                     v-if="currentStep > 1"
-                    class="px-6 py-3 border border-[#1e73be] text-[#1e73be] rounded-lg font-medium hover:bg-blue-50 transition-all duration-300"
+                    class="px-6 py-3 border border-blue-600 text-blue-600 rounded-lg font-medium hover:bg-blue-50 transition-all duration-300"
                     @click="currentStep--"
                   >
                     <span class="flex items-center">
@@ -109,7 +115,7 @@
                   
                   <button 
                     v-if="currentStep < 3"
-                    class="px-6 py-3 bg-[#1e73be] hover:bg-blue-700 text-white rounded-lg font-medium shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
                     @click="validateAndNext(currentStep)" 
                     :disabled="currentStep === 1 ? isPersonalLoading : isTripLoading"
                   >
@@ -121,7 +127,7 @@
                   
                   <button 
                     v-if="currentStep === 3"
-                    class="px-6 py-3 bg-[#7ac142] hover:bg-green-600 text-white rounded-lg font-medium shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
                     @click="handlePaymentSubmit" 
                     :disabled="isPaymentLoading"
                   >
@@ -133,36 +139,25 @@
                 </div>
               </div>
             </div>
-            
-            <!-- Footer con garantías -->
-            <div class="wizard-footer px-8 py-6 border-t border-gray-100 bg-white">
-              <div class="flex flex-wrap justify-center gap-6">
-                <div class="benefit-item flex items-center">
-                  <div class="icon-wrapper bg-blue-100 p-2 rounded-full mr-3 transition-all duration-300">
-                    <v-icon color="#1e73be" size="small">mdi-shield-check</v-icon>
-                  </div>
-                  <span class="text-gray-700">Pago 100% Seguro</span>
-                </div>
-                <div class="benefit-item flex items-center">
-                  <div class="icon-wrapper bg-blue-100 p-2 rounded-full mr-3 transition-all duration-300">
-                    <v-icon color="#1e73be" size="small">mdi-currency-usd-off</v-icon>
-                  </div>
-                  <span class="text-gray-700">Sin Cargos Ocultos</span>
-                </div>
-                <div class="benefit-item flex items-center">
-                  <div class="icon-wrapper bg-blue-100 p-2 rounded-full mr-3 transition-all duration-300">
-                    <v-icon color="#1e73be" size="small">mdi-account-check</v-icon>
-                  </div>
-                  <span class="text-gray-700">Asistencia 24/7</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
+      
+      <!-- Botones de redes sociales -->
+      <div class="mt-8 flex justify-center space-x-4 pb-8 relative z-10">
+        <a href="https://facebook.com/ExploraChiletour" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+          <v-icon size="24">mdi-facebook</v-icon>
+        </a>
+        <a href="https://instagram.com/girasexplora" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+          <v-icon size="24">mdi-instagram</v-icon>
+        </a>
+        <a href="https://api.whatsapp.com/message/PTODH3ELVDXNN1?autoload=1&app_absent=0" target="_blank" class="text-white hover:text-green-200 transition-colors">
+          <v-icon size="24">mdi-whatsapp</v-icon>
+        </a>
+      </div>
     </div>
     
-    <FooterComponent />
+    <FooterComponent class="w-full" />
   </div>
 </template>
 
@@ -254,17 +249,17 @@ const handlePaymentSubmit = async () => {
 }
 
 .step-item.active .step-circle {
-  background-color: #1e73be;
+  background-color: #2563eb; /* blue-600 */
   color: white;
 }
 
 .step-item.completed .step-circle {
-  background-color: #7ac142;
+  background-color: #1d4ed8; /* blue-700 */
 }
 
 .step-item.active .step-connector,
 .step-item.completed .step-connector {
-  background-color: #1e73be;
+  background-color: #2563eb; /* blue-600 */
 }
 
 .icon-wrapper {

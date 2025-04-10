@@ -9,14 +9,10 @@
       <div class="flex items-center justify-between">
         <!-- Logo -->
         <router-link
-          class="font-bold text-2xl flex items-center"
-          :class="scrolled ? 'text-slate-800' : 'text-white'"
+          class="flex items-center"
           to="/"
         >
-          <span class="relative">
-            <span class="inline-block transform transition-transform duration-300 hover:scale-105">Explora Chile</span>
-            <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-blue-500 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100"></span>
-          </span>
+          <img src="/logo.png" alt="Explora Chile Tour" class="h-20 transform transition-transform duration-300 hover:scale-105" />
         </router-link>
 
         <!-- Mobile menu toggle -->
@@ -53,7 +49,7 @@
             </router-link>
 
             <!-- Auth buttons -->
-            <div class="flex space-x-2 ml-4 items-center">
+            <div class="flex space-x-2 ml-4 items-center" v-if="false">
               <router-link
                 to="/login"
                 class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 border"
@@ -122,7 +118,7 @@
               {{ item.name }}
             </router-link>
             
-            <div class="grid grid-cols-2 gap-2 pt-2 pb-2">
+            <div class="grid grid-cols-2 gap-2 pt-2 pb-2" v-if="false">
               <router-link
                 to="/login"
                 class="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 border text-center"
@@ -188,9 +184,9 @@ const authStore = useAuthStore()
 
 // Items de navegación
 const navItems = [
-  { name: 'Destinos', path: '/destinos', icon: 'mdi-map-marker' },
-  { name: 'Ofertas', path: '/ofertas', icon: 'mdi-tag-multiple' },
-  { name: 'Contacto', path: '/contacto', icon: 'mdi-email-outline' }
+  // { name: 'Destinos', path: '/destinos', icon: 'mdi-map-marker' },
+  // { name: 'Ofertas', path: '/ofertas', icon: 'mdi-tag-multiple' },
+  // { name: 'Contacto', path: '/contacto', icon: 'mdi-email-outline' }
 ]
 
 // Estado para el menú responsive

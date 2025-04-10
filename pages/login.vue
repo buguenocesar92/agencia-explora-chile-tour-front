@@ -1,35 +1,33 @@
 <template>
   <div class="min-h-screen flex flex-col">
-    <Navbar bgColor="bg-gradient-to-r from-sky-600 to-teal-500" />
+    <Navbar bgColor="bg-gradient-to-r from-blue-600 to-blue-800" v-if="false" />
     
-    <div class="flex-grow bg-gray-50 dark:bg-gray-900 mt-12">
-      <!-- Hero section con gradiente -->
-      <div class="relative bg-gradient-to-r from-sky-600 to-teal-500 py-16">
-        <div class="container mx-auto px-4 relative z-20 text-center">
-          <h1 class="text-4xl font-bold text-white mb-4">Inicia Sesión en tu Cuenta</h1>
-          <p class="text-white text-lg mb-8 max-w-2xl mx-auto">
-            Ingresa tus credenciales para acceder a tu panel de control.
-          </p>
+    <div class="flex-grow">
+      <!-- Call to Action modernizado - Diseño tipo popup -->
+      <section class="relative overflow-hidden min-h-screen flex items-center justify-center">
+        <!-- Imagen de fondo (bg.webp) -->
+        <div class="absolute inset-0 bg-cover bg-center" 
+             style="background-image: url('/bg.webp'); filter: brightness(0.8);">
         </div>
         
-        <!-- Wave decoration -->
-        <div class="absolute bottom-0 left-0 right-0 z-10">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="w-full h-auto">
-            <path fill="#f9fafb" fill-opacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z" class="dark:fill-gray-900"></path>
-          </svg>
-        </div>
-      </div>
-      
-      <!-- Contenido principal -->
-      <div class="container mx-auto px-4 py-8 -mt-20 relative z-30">
-        <div class="max-w-md mx-auto">
+        <!-- Overlay azul con gradiente -->
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 opacity-80"></div>
+        
+        <div class="relative z-10 w-full max-w-md mx-auto px-6">
+          <!-- Logo -->
+          <div class="flex justify-center mb-6">
+            <img src="/logo.png" alt="Explora Chiletour" class="h-24 mb-2" />
+          </div>
+          
           <!-- Formulario de inicio de sesión -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+          <div class="bg-white/90 backdrop-blur-md rounded-xl shadow-xl overflow-hidden">
             <div class="p-8">
+              <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Iniciar Sesión</h2>
+              
               <form @submit.prevent="handleLogin" class="space-y-6">
                 <!-- Correo Electrónico -->
                 <div>
-                  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
                     Correo Electrónico
                   </label>
                   <input 
@@ -38,16 +36,16 @@
                     type="email" 
                     required
                     placeholder="Ejemplo: correo@dominio.com"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500" 
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                   />
-                  <p v-if="errors.email?.[0]" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                  <p v-if="errors.email?.[0]" class="mt-1 text-sm text-red-600">
                     {{ errors.email[0] }}
                   </p>
                 </div>
                 
                 <!-- Contraseña -->
                 <div>
-                  <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
                     Contraseña
                   </label>
                   <input 
@@ -56,9 +54,9 @@
                     type="password" 
                     required
                     placeholder="Introduce tu contraseña"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500" 
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                   />
-                  <p v-if="errors.password?.[0]" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                  <p v-if="errors.password?.[0]" class="mt-1 text-sm text-red-600">
                     {{ errors.password[0] }}
                   </p>
                 </div>
@@ -66,14 +64,14 @@
                 <!-- Enlaces de ayuda -->
                 <div class="flex items-center justify-between">
                   <div class="flex items-center">
-                    <input id="remember-me" type="checkbox" class="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded">
-                    <label for="remember-me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    <input id="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="remember-me" class="ml-2 block text-sm text-gray-700">
                       Recordarme
                     </label>
                   </div>
                   
                   <div class="text-sm">
-                    <a href="#" class="font-medium text-teal-600 hover:text-teal-500 dark:text-teal-400 dark:hover:text-teal-300">
+                    <a href="#" class="font-medium text-blue-600 hover:text-blue-700">
                       ¿Olvidaste tu contraseña?
                     </a>
                   </div>
@@ -83,13 +81,13 @@
                 <button
                   type="submit"
                   :disabled="isLoading"
-                  class="w-full px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="w-full px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                 >
                   {{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
                 </button>
                 
                 <!-- Mensaje de error -->
-                <div v-if="errorMessage" class="p-4 bg-red-50 dark:bg-red-900 rounded-lg">
+                <div v-if="errorMessage" class="p-4 bg-red-50 rounded-lg">
                   <div class="flex">
                     <div class="flex-shrink-0">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -97,7 +95,7 @@
                       </svg>
                     </div>
                     <div class="ml-3">
-                      <p class="text-sm text-red-700 dark:text-red-200">{{ errorMessage }}</p>
+                      <p class="text-sm text-red-700">{{ errorMessage }}</p>
                     </div>
                   </div>
                 </div>
@@ -105,41 +103,33 @@
               
               <!-- Registro -->
               <div class="mt-6 text-center">
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-gray-600">
                   ¿No tienes una cuenta?
-                  <a href="/register" class="font-medium text-teal-600 hover:text-teal-500 dark:text-teal-400 dark:hover:text-teal-300">
+                  <router-link to="/register" class="font-medium text-blue-600 hover:text-blue-700">
                     Regístrate ahora
-                  </a>
+                  </router-link>
                 </p>
               </div>
             </div>
           </div>
           
-          <!-- Información adicional -->
-          <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-            <div class="p-6">
-              <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">¿Necesitas ayuda?</h2>
-              <ul class="space-y-2 text-gray-700 dark:text-gray-300">
-                <li class="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>Si tienes problemas para iniciar sesión, contacta a soporte.</span>
-                </li>
-                <li class="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>Asegúrate de usar el correo electrónico con el que te registraste.</span>
-                </li>
-              </ul>
-            </div>
+          <!-- Botones de redes sociales -->
+          <div class="mt-8 flex justify-center space-x-4">
+            <a href="https://facebook.com/ExploraChiletour" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+              <v-icon size="24">mdi-facebook</v-icon>
+            </a>
+            <a href="https://instagram.com/explora_chiletour" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+              <v-icon size="24">mdi-instagram</v-icon>
+            </a>
+            <a href="https://api.whatsapp.com/message/PTODH3ELVDXNN1?autoload=1&app_absent=0" target="_blank" class="text-white hover:text-green-200 transition-colors">
+              <v-icon size="24">mdi-whatsapp</v-icon>
+            </a>
           </div>
         </div>
-      </div>
+      </section>
     </div>
     
-    <FooterComponent class="mt-auto" />
+    <FooterComponent class="w-full" />
   </div>
 </template>
 

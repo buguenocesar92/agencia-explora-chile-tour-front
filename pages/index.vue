@@ -1,52 +1,79 @@
 <template>
   <div>
-    <Navbar bgColor="bg-gradient-to-r from-[#7ac142] to-[#1e73be]" />
+    <Navbar bgColor="bg-gradient-to-r from-[#7ac142] to-[#1e73be]" v-if="false" />
     
     <!-- Modal de Reserva -->
     <ReservationModal v-model="showReservationModal" @start-reservation="goToWizard" />
     
     <!-- Call to Action modernizado - Diseño tipo popup -->
-    <section class="py-20 relative overflow-hidden">
-      <!-- Imagen de fondo (playa) -->
+    <section class="relative overflow-hidden h-screen flex items-center justify-center">
+      <!-- Imagen de fondo (bg.webp) -->
       <div class="absolute inset-0 bg-cover bg-center" 
-           style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2073&q=80'); filter: brightness(0.8);">
+           style="background-image: url('/bg.webp'); filter: brightness(0.8);">
       </div>
       
       <!-- Overlay azul con gradiente -->
       <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 opacity-80"></div>
       
-      <div class="container mx-auto px-4 relative z-10">
-        <div class="max-w-3xl mx-auto text-center">
-          <h2 class="text-4xl font-bold mb-6 text-white">¿Listo para vivir una aventura?</h2>
-          <p class="text-xl text-white/90 mb-10">Contacta con nosotros hoy y comienza a planificar tu próximo viaje inolvidable por Chile.</p>
-          
-          <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <button 
-              @click="showReservationModal = true" 
-              class="px-8 py-4 bg-white text-blue-700 font-bold rounded-lg hover:bg-blue-50 transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-              Reservar ahora
-            </button>
-            <router-link 
-              to="/contacto" 
-              class="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-all duration-300 text-center">
-              Más información
-            </router-link>
+      <div class="relative z-10 max-w-xl w-full px-6 mx-auto text-center">
+        <div class="flex justify-center mb-4">
+          <div class="bg-white/90 text-blue-600 rounded-lg px-4 py-2 text-sm font-bold inline-flex items-center">
+            <span class="mr-2">✓</span> Registrados en Sernatur
           </div>
+        </div>
+        <div class="flex justify-center mb-6 mt-4">
+          <img src="/logo.png" alt="Explora Chiletour" class="h-44 mb-2 mt-24" />
+        </div>
+        <h3 class="text-2xl font-semibold mb-6 text-white/90">Tu mejor viaje comienza aquí</h3>
+        <p class="text-xl text-white/90 mb-8">Viajes grupales por Chile y el mundo 🌎 • Giras de estudios • Experiencias inolvidables</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
+            <span class="text-2xl mb-2 block">🧭</span>
+            <span class="font-medium">Viajes grupales</span>
+          </div>
+          <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
+            <span class="text-2xl mb-2 block">✈️</span>
+            <span class="font-medium">Destinos internacionales</span>
+          </div>
+          <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
+            <span class="text-2xl mb-2 block">🎓</span>
+            <span class="font-medium">Giras de estudios</span>
+          </div>
+        </div>
+        
+        <div class="flex justify-center">
+          <button 
+            @click="goToWizard()" 
+            class="px-10 py-5 bg-white text-blue-700 font-bold rounded-lg hover:bg-blue-50 transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg">
+            Reservar ahora
+          </button>
+        </div>
+        
+        <div class="mt-8 flex justify-center space-x-4">
+          <a href="https://facebook.com/ExploraChiletour" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+            <v-icon size="24">mdi-facebook</v-icon>
+          </a>
+          <a href="https://instagram.com/explora_chiletour" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+            <v-icon size="24">mdi-instagram</v-icon>
+          </a>
+          <a href="https://api.whatsapp.com/message/PTODH3ELVDXNN1?autoload=1&app_absent=0" target="_blank" class="text-white hover:text-green-200 transition-colors">
+            <v-icon size="24">mdi-whatsapp</v-icon>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- Galería de destinos modernizada -->
-    <section class="py-20 bg-gray-50">
+<!--     <section class="py-20 bg-gray-50">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold mb-4 text-gray-800">Descubre Chile</h2>
           <p class="text-gray-600 max-w-2xl mx-auto">Explora los destinos más increíbles de Chile a través de nuestra galería de imágenes de lugares impresionantes</p>
         </div>
-        
-        <!-- Carrusel de imágenes moderno -->
+
         <div class="relative overflow-hidden rounded-2xl shadow-2xl h-[600px]">
-          <!-- Indicadores -->
+
           <div class="absolute bottom-6 left-0 right-0 z-10 flex justify-center space-x-2">
             <button 
               v-for="(image, i) in galleryImages" 
@@ -59,7 +86,7 @@
             ></button>
           </div>
           
-          <!-- Imágenes -->
+
           <div 
             v-for="(image, i) in galleryImages" 
             :key="i"
@@ -76,8 +103,7 @@
               <p class="text-white/90 text-lg max-w-2xl">{{ image.description }}</p>
             </div>
           </div>
-          
-          <!-- Controles -->
+
           <button 
             class="absolute top-1/2 left-4 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-3 backdrop-blur-sm transition-all duration-300 hover:scale-110 z-10"
             @click="prevSlide"
@@ -92,10 +118,10 @@
           </button>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- Servicios modernizados -->
-    <section class="py-20">
+<!--     <section class="py-20">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold mb-4 text-gray-800">Nuestros Servicios</h2>
@@ -159,10 +185,10 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- Testimonios modernizados -->
-    <section class="py-20 bg-blue-50">
+<!--     <section class="py-20 bg-blue-50">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold mb-4 text-gray-800">Lo Que Dicen Nuestros Viajeros</h2>
@@ -213,9 +239,9 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
-    <FooterComponent />
+    <FooterComponent class="w-full" />
   </div>
 </template>
 
