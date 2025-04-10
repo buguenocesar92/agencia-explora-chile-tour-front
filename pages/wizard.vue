@@ -15,7 +15,9 @@
         <div class="max-w-4xl mx-auto">
           <!-- Logo -->
           <div class="flex justify-center mb-8">
-            <img src="/logo.png" alt="Explora Chiletour" class="h-24 mb-2" />
+            <router-link to="/">
+              <img src="/logo.png" alt="Explora Chiletour" class="h-24 mb-2" />
+            </router-link>
           </div>
           
           <div class="reservation-wizard bg-white/90 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl border border-white/20">

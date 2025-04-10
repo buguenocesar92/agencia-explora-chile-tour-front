@@ -6,7 +6,7 @@
     <ReservationModal v-model="showReservationModal" @start-reservation="goToWizard" />
     
     <!-- Call to Action modernizado - Diseño tipo popup -->
-    <section class="relative overflow-hidden h-screen flex items-center justify-center">
+    <section class="relative min-h-screen flex items-center justify-center py-10 sm:py-0">
       <!-- Imagen de fondo (bg.webp) -->
       <div class="absolute inset-0 bg-cover bg-center" 
            style="background-image: url('/bg.webp'); filter: brightness(0.8);">
@@ -15,42 +15,44 @@
       <!-- Overlay azul con gradiente -->
       <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 opacity-80"></div>
       
-      <div class="relative z-10 max-w-xl w-full px-6 mx-auto text-center">
+      <div class="relative z-10 max-w-xl w-full px-4 sm:px-6 mx-auto text-center mt-8 mb-10 sm:mb-0">
         <div class="flex justify-center mb-4">
           <div class="bg-white/90 text-blue-600 rounded-lg px-4 py-2 text-sm font-bold inline-flex items-center">
             <span class="mr-2">✓</span> Registrados en Sernatur
           </div>
         </div>
-        <div class="flex justify-center mb-6 mt-4">
-          <img src="/logo.png" alt="Explora Chiletour" class="h-44 mb-2 mt-24" />
+        <div class="flex justify-center mb-6">
+          <router-link to="/">
+            <img src="/logo.png" alt="Explora Chiletour" class="h-24 sm:h-32 md:h-44 mb-2" />
+          </router-link>
         </div>
-        <h3 class="text-2xl font-semibold mb-6 text-white/90">Tu mejor viaje comienza aquí</h3>
-        <p class="text-xl text-white/90 mb-8">Viajes grupales por Chile y el mundo 🌎 • Giras de estudios • Experiencias inolvidables</p>
+        <h3 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-white/90">Tu mejor viaje comienza aquí</h3>
+        <p class="text-lg sm:text-xl text-white/90 mb-6 sm:mb-8">Viajes grupales por Chile y el mundo 🌎 • Giras de estudios • Experiencias inolvidables</p>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-          <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
-            <span class="text-2xl mb-2 block">🧭</span>
-            <span class="font-medium">Viajes grupales</span>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-10">
+          <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-white">
+            <span class="text-xl sm:text-2xl mb-1 sm:mb-2 block">🧭</span>
+            <span class="font-medium text-sm sm:text-base">Viajes grupales</span>
           </div>
-          <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
-            <span class="text-2xl mb-2 block">✈️</span>
-            <span class="font-medium">Destinos internacionales</span>
+          <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-white">
+            <span class="text-xl sm:text-2xl mb-1 sm:mb-2 block">✈️</span>
+            <span class="font-medium text-sm sm:text-base">Destinos internacionales</span>
           </div>
-          <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
-            <span class="text-2xl mb-2 block">🎓</span>
-            <span class="font-medium">Giras de estudios</span>
+          <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-white">
+            <span class="text-xl sm:text-2xl mb-1 sm:mb-2 block">🎓</span>
+            <span class="font-medium text-sm sm:text-base">Giras de estudios</span>
           </div>
         </div>
         
         <div class="flex justify-center">
           <button 
             @click="goToWizard()" 
-            class="px-10 py-5 bg-white text-blue-700 font-bold rounded-lg hover:bg-blue-50 transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg">
+            class="px-6 py-3 sm:px-10 sm:py-5 bg-white text-blue-700 font-bold rounded-lg hover:bg-blue-50 transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-base sm:text-lg">
             Reservar ahora
           </button>
         </div>
         
-        <div class="mt-8 flex justify-center space-x-4">
+        <div class="mt-6 sm:mt-8 flex justify-center space-x-4 pb-4">
           <a href="https://facebook.com/ExploraChiletour" target="_blank" class="text-white hover:text-blue-200 transition-colors">
             <v-icon size="24">mdi-facebook</v-icon>
           </a>

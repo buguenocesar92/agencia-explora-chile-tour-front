@@ -5,7 +5,9 @@
         <!-- Columna 1: Información de la empresa -->
         <div>
           <h3 class="mb-4">
-            <img src="/logo.jpg" alt="Explora Chiletour" class="h-16 mb-2" />
+            <router-link to="/">
+              <img src="/logo.jpg" alt="Explora Chiletour" class="h-16 mb-2" />
+            </router-link>
           </h3>
           <div class="bg-blue-700/50 inline-block px-3 py-1 rounded-lg text-white text-sm font-medium mb-4">
             Registrados en Sernatur

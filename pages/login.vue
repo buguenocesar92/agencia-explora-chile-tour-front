@@ -16,7 +16,9 @@
         <div class="relative z-10 w-full max-w-md mx-auto px-6">
           <!-- Logo -->
           <div class="flex justify-center mb-6">
-            <img src="/logo.png" alt="Explora Chiletour" class="h-24 mb-2" />
+            <router-link to="/">
+              <img src="/logo.png" alt="Explora Chiletour" class="h-24 mb-2" />
+            </router-link>
           </div>
           
           <!-- Formulario de inicio de sesión -->
