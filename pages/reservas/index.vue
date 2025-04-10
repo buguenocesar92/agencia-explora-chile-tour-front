@@ -1,21 +1,63 @@
 <template>
   <AdminWrapper>
     <div class="container mx-auto p-6">
-      <!-- Encabezado con búsqueda -->
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">Gestión de Reservas</h1>
-        <ReservationSearch 
-          :model-value="searchQuery"
-          @update:model-value="updateSearch"
-        />
+      <!-- Encabezado con título -->
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+          <i class="mdi mdi-calendar-check text-blue-600 mr-2"></i>
+          Gestión de Reservas
+        </h1>
       </div>
 
-      <!-- Filtros de reservas -->
-      <ReservationFilters
-        v-model="filters"
-        @filter-changed="applyFilters"
-        ref="filtersRef"
-      />
+      <!-- Sección de filtros y búsqueda -->
+      <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
+        <div class="flex flex-col md:flex-row gap-4 mb-4">
+          <!-- Buscador por nombre o RUT -->
+          <div class="w-full md:w-1/3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Buscar por nombre o RUT</label>
+            <ReservationSearch 
+              :model-value="searchQuery"
+              @update:model-value="updateSearch"
+            />
+          </div>
+          
+          <!-- Filtro por Tour -->
+          <div class="w-full md:w-1/3">
+            <TourFilterSelect
+              v-model="filters.tourId"
+              label="Filtrar por Tour"
+              placeholder="Todos los tours"
+              @tour-selected="onTourSelected"
+            />
+          </div>
+          
+          <!-- Filtro por Estado de Pago -->
+          <div class="w-full md:w-1/3">
+            <FormSelect
+              id="statusFilter"
+              v-model="filters.status"
+              :options="statusOptions"
+              label="Estado de Pago"
+              placeholder="Todos los estados"
+              @update:model-value="onStatusSelected"
+            />
+          </div>
+        </div>
+        
+        <!-- Botón para limpiar filtros -->
+        <div class="flex justify-end">
+          <button 
+            v-if="hasActiveFilters"
+            @click="resetAllFilters" 
+            class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          >
+            <span class="flex items-center">
+              <i class="mdi mdi-filter-remove mr-1"></i>
+              Limpiar filtros
+            </span>
+          </button>
+        </div>
+      </div>
 
       <!-- Tabla de reservas -->
       <ReservationTable
@@ -51,11 +93,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import AdminWrapper from '@/components/AdminWrapper.vue';
 import ReservationSearch from '@/components/reservations/ReservationSearch.vue';
 import ReservationTable from '@/components/reservations/ReservationTable.vue';
-import ReservationFilters from '@/components/reservations/ReservationFilters.vue';
+import TourFilterSelect from '@/components/reservations/TourFilterSelect.vue';
+import FormSelect from '@/components/FormSelect.vue';
 import ClientModal from '@/components/reservations/modals/ClientModal.vue';
 import TripModal from '@/components/reservations/modals/TripModal.vue';
 import ReceiptModal from '@/components/reservations/modals/ReceiptModal.vue';
@@ -119,6 +162,18 @@ const filters = ref<Filters>({
 
 // Extraemos la lógica del composable de reservas
 const { reservations, isLoading, loadReservations, updateReservationStatus, handleDelete } = useReservationManager();
+
+// Opciones para el filtro de estado
+const statusOptions = ref([
+  { text: 'Pagado', value: 'paid' },
+  { text: 'No Pagado', value: 'not paid' }
+]);
+
+// Computado para saber si hay filtros activos
+const hasActiveFilters = computed(() => {
+  return (filters.value.tourId !== null && filters.value.tourId !== undefined) || 
+         (filters.value.status !== null && filters.value.status !== undefined && filters.value.status !== '');
+});
 
 // Manejar cambios en la búsqueda
 function updateSearch(value: string): void {
@@ -222,5 +277,19 @@ function openTripModal(trip?: Trip): void {
     selectedTrip.value = trip;
     showTripModal.value = true;
   }
+}
+
+// Filtro cuando cambia el tour seleccionado
+function onTourSelected(tour: TourTemplatePayload | null): void {
+  console.log("Tour seleccionado:", tour);
+  filters.value.tourId = tour?.id || null;
+  applyFilters(filters.value);
+}
+
+// Filtro cuando cambia el estado seleccionado
+function onStatusSelected(status: string | null): void {
+  console.log("Estado seleccionado:", status);
+  filters.value.status = status;
+  applyFilters(filters.value);
 }
 </script>

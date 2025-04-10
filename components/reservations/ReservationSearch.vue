@@ -1,14 +1,16 @@
 <template>
-  <v-text-field
-    v-model="localValue"
-    label="Buscar por nombre o RUT"
-    prepend-inner-icon="mdi-magnify"
-    clearable
-    outlined
-    dense
-    class="max-w-md"
-    :loading="isDebouncing"
-  ></v-text-field>
+  <div class="relative w-full">
+    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <i class="mdi mdi-magnify text-gray-400"></i>
+    </div>
+    <input
+      type="text"
+      class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+      :value="modelValue"
+      @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      placeholder="Buscar por nombre o RUT"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
