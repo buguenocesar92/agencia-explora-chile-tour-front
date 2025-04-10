@@ -11,7 +11,11 @@
           :error="errors.receipt ? errors.receipt[0] : ''"
           required
           @change="handleFileChange"
+          accept=".jpg,.jpeg,.png,.bmp,.pdf"
         />
+        <p class="text-sm text-gray-600">
+          Formatos permitidos: JPG, JPEG, PNG, BMP, PDF. Tamaño máximo: 2MB.
+        </p>
       </div>
     </v-form>
   </div>

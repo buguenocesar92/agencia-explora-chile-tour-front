@@ -68,13 +68,22 @@
 
     <!-- Sección de Pago: Comprobante de Pago -->
     <div class="mb-4">
-      <label class="block text-gray-700 mb-2">Comprobante de Pago (Imagen)</label>
+      <label class="block text-gray-700 mb-2">Comprobante de Pago</label>
       <div v-if="localReservation.payment.receipt_url">
         <img
+          v-if="localReservation.payment.receipt_url.toLowerCase().endsWith('.jpg') || 
+                localReservation.payment.receipt_url.toLowerCase().endsWith('.jpeg') || 
+                localReservation.payment.receipt_url.toLowerCase().endsWith('.png') || 
+                localReservation.payment.receipt_url.toLowerCase().endsWith('.bmp')"
           :src="localReservation.payment.receipt_url"
           alt="Comprobante Actual"
           class="mb-2 max-h-40 object-contain"
         />
+        <div v-else-if="localReservation.payment.receipt_url.toLowerCase().endsWith('.pdf')">
+          <a :href="localReservation.payment.receipt_url" target="_blank" class="text-blue-500 underline">
+            Ver documento PDF
+          </a>
+        </div>
       </div>
       <FormInput
         id="payment-receipt"
@@ -82,14 +91,22 @@
         type="file"
         v-model="paymentFile"
         :error="errors['payment.receipt'] ? errors['payment.receipt'][0] : ''"
+        accept=".jpg,.jpeg,.png,.bmp,.pdf"
       />
+      <p class="text-sm text-gray-600 mt-1">
+        Formatos permitidos: JPG, JPEG, PNG, BMP, PDF. Tamaño máximo: 2MB.
+      </p>
       <div v-if="previewUrl">
-        <p class="text-gray-700 mt-1">Nueva imagen seleccionada:</p>
+        <p class="text-gray-700 mt-1">Nuevo archivo seleccionado:</p>
         <img
+          v-if="isImageFile"
           :src="previewUrl"
           alt="Vista previa"
           class="mt-2 max-h-40 object-contain"
         />
+        <p v-else class="mt-2 text-blue-500">
+          Archivo PDF seleccionado
+        </p>
       </div>
     </div>
 
@@ -105,7 +122,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, toRefs } from 'vue';
+import { ref, watch, toRefs, computed } from 'vue';
 import type { ReservationPayload } from '@/types/ReservationTypes';
 import FormInput from '@/components/FormInput.vue';
 import FormSelect from '@/components/FormSelect.vue';
@@ -137,6 +154,17 @@ const tripOptionsSelect = ref([
   { id: 2, name: '2025-05-01 - 2025-05-10' },
   { id: 3, name: '2025-06-01 - 2025-06-10' },
 ]);
+
+// Propiedad computada para verificar si el archivo seleccionado es una imagen
+const isImageFile = computed(() => {
+  if (!paymentFile.value) return false;
+  
+  const fileName = paymentFile.value.name.toLowerCase();
+  return fileName.endsWith('.jpg') || 
+         fileName.endsWith('.jpeg') || 
+         fileName.endsWith('.png') || 
+         fileName.endsWith('.bmp');
+});
 
 // Sincronizar localReservation cuando modelValue cambie
 watch(() => props.modelValue, (newVal) => {
