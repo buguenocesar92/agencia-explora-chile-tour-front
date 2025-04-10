@@ -10,6 +10,13 @@
         />
       </div>
 
+      <!-- Filtros de reservas -->
+      <ReservationFilters
+        v-model="filters"
+        @filter-changed="applyFilters"
+        ref="filtersRef"
+      />
+
       <!-- Tabla de reservas -->
       <ReservationTable
         :reservations="reservations"
@@ -48,10 +55,13 @@ import { ref, onMounted } from 'vue';
 import AdminWrapper from '@/components/AdminWrapper.vue';
 import ReservationSearch from '@/components/reservations/ReservationSearch.vue';
 import ReservationTable from '@/components/reservations/ReservationTable.vue';
+import ReservationFilters from '@/components/reservations/ReservationFilters.vue';
 import ClientModal from '@/components/reservations/modals/ClientModal.vue';
 import TripModal from '@/components/reservations/modals/TripModal.vue';
 import ReceiptModal from '@/components/reservations/modals/ReceiptModal.vue';
 import { useReservationManager } from '@/composables/Reservation/useReservationManager';
+import type { ReservationPayload } from '@/types/ReservationTypes';
+import type { TourTemplatePayload } from '@/types/TourTemplateTypes';
 
 // Define interfaces for the data types
 interface Client {
@@ -80,6 +90,12 @@ interface Trip {
   tour_template?: TourTemplate | null;
 }
 
+// Interfaz para los filtros
+interface Filters {
+  tourId: number | null;
+  // Otros filtros en el futuro
+}
+
 definePageMeta({
   requiresAuth: true,
   sidebar: true,
@@ -87,7 +103,12 @@ definePageMeta({
   icon: 'mdi-format-list-checkbox'
 });
 
+// Referencias a componentes
+const filtersRef = ref(null);
+
+// Estado
 const searchQuery = ref('');
+const filters = ref<Filters>({ tourId: null });
 
 // Extraemos la lógica del composable de reservas
 const { reservations, isLoading, loadReservations, updateReservationStatus, handleDelete } = useReservationManager();
@@ -95,13 +116,46 @@ const { reservations, isLoading, loadReservations, updateReservationStatus, hand
 // Manejar cambios en la búsqueda
 function updateSearch(value: string): void {
   searchQuery.value = value;
-  handleSearch(value);
+  
+  // Al buscar, mantenemos el filtro de tour si existe
+  if (filters.value.tourId) {
+    loadReservations(value, { tour_id: filters.value.tourId });
+  } else {
+    loadReservations(value);
+  }
 }
 
-function handleSearch(value: string): void {
-  loadReservations(value);
+// Aplicar filtros desde el componente de filtros
+function applyFilters(newFilters: Filters): void {
+  console.log("Aplicando nuevos filtros:", newFilters);
+  filters.value = newFilters;
+  
+  // Verificar explícitamente si el filtro de tour es null o undefined
+  if (newFilters.tourId !== null && newFilters.tourId !== undefined) {
+    console.log("Filtrando por tour_id:", newFilters.tourId);
+    loadReservations(searchQuery.value, { tour_id: newFilters.tourId });
+  } else {
+    console.log("Reseteando filtro de tour_id a null, cargando todas las reservas");
+    // Pasar explícitamente tour_id: null para asegurarnos que se elimine el filtro
+    loadReservations(searchQuery.value, { tour_id: null });
+  }
 }
 
+// Función para resetear todos los filtros
+function resetAllFilters(): void {
+  console.log("Reseteando todos los filtros");
+  filters.value = { tourId: null };
+  
+  // Si tenemos una referencia al componente de filtros, usamos su método resetFilters
+  if (filtersRef.value && 'resetFilters' in filtersRef.value) {
+    (filtersRef.value as any).resetFilters();
+  }
+  
+  // Cargamos las reservas sin filtros
+  loadReservations(searchQuery.value);
+}
+
+// Eventos del ciclo de vida
 onMounted(() => {
   loadReservations(searchQuery.value);
 });

@@ -98,6 +98,8 @@ const computedValue = computed({
 watchEffect(() => {
   console.log(`[FormSelect ${props.id}] Opciones:`, formattedOptions.value);
   console.log(`[FormSelect ${props.id}] Valor actual:`, props.modelValue);
+  console.log(`[FormSelect ${props.id}] Placeholder value:`, props.placeholderValue);
+  console.log(`[FormSelect ${props.id}] Es placeholder:`, isPlaceholder.value);
 });
 </script>
 

@@ -2,13 +2,30 @@
 import { useNuxtApp } from '#app';
 import type { ReservationPayload } from '@/types/ReservationTypes';
 
-export async function fetchReservations(search?: string): Promise<ReservationPayload[]> {
+interface ReservationFilters {
+  tour_id?: number;
+}
+
+export async function fetchReservations(search?: string, filters?: ReservationFilters): Promise<ReservationPayload[]> {
   const { $axios } = useNuxtApp();
-  const response = await $axios.get('/reservations', {
-    params: {
-      search: search || undefined
+  
+  // Construir los parámetros de consulta
+  const params: any = {};
+  
+  // Agregar parámetro de búsqueda si existe
+  if (search) {
+    params.search = search;
+  }
+  
+  // Agregar filtros si existen
+  if (filters) {
+    if (filters.tour_id) {
+      params.tour_id = filters.tour_id;
     }
-  });
+    // Aquí se pueden agregar más filtros en el futuro
+  }
+  
+  const response = await $axios.get('/reservations', { params });
   return response.data.reservations;
 }
 
