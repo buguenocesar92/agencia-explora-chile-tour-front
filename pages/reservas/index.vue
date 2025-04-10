@@ -93,6 +93,7 @@ interface Trip {
 // Interfaz para los filtros
 interface Filters {
   tourId: number | null;
+  status: string | null;
   // Otros filtros en el futuro
 }
 
@@ -104,11 +105,17 @@ definePageMeta({
 });
 
 // Referencias a componentes
-const filtersRef = ref(null);
+const filtersRef = ref<{
+  resetFilters: () => void,
+  selectedTour: any
+} | null>(null);
 
 // Estado
 const searchQuery = ref('');
-const filters = ref<Filters>({ tourId: null });
+const filters = ref<Filters>({ 
+  tourId: null,
+  status: null 
+});
 
 // Extraemos la lógica del composable de reservas
 const { reservations, isLoading, loadReservations, updateReservationStatus, handleDelete } = useReservationManager();
@@ -117,12 +124,20 @@ const { reservations, isLoading, loadReservations, updateReservationStatus, hand
 function updateSearch(value: string): void {
   searchQuery.value = value;
   
-  // Al buscar, mantenemos el filtro de tour si existe
+  // Preparamos el objeto de filtros para el backend
+  const backendFilters: any = {};
+  
+  // Al buscar, mantenemos los filtros existentes
   if (filters.value.tourId) {
-    loadReservations(value, { tour_id: filters.value.tourId });
-  } else {
-    loadReservations(value);
+    backendFilters.tour_id = filters.value.tourId;
   }
+  
+  if (filters.value.status) {
+    backendFilters.status = filters.value.status;
+  }
+  
+  // Aplicamos la búsqueda con los filtros actuales
+  loadReservations(value, backendFilters);
 }
 
 // Aplicar filtros desde el componente de filtros
@@ -130,29 +145,47 @@ function applyFilters(newFilters: Filters): void {
   console.log("Aplicando nuevos filtros:", newFilters);
   filters.value = newFilters;
   
-  // Verificar explícitamente si el filtro de tour es null o undefined
+  // Preparamos el objeto de filtros para el backend
+  const backendFilters: any = {};
+  
+  // Filtro de tour
   if (newFilters.tourId !== null && newFilters.tourId !== undefined) {
     console.log("Filtrando por tour_id:", newFilters.tourId);
-    loadReservations(searchQuery.value, { tour_id: newFilters.tourId });
+    backendFilters.tour_id = newFilters.tourId;
+  }
+  
+  // Filtro de status
+  if (newFilters.status !== null && newFilters.status !== undefined && newFilters.status !== '') {
+    console.log("Filtrando por status:", newFilters.status);
+    backendFilters.status = newFilters.status;
+  }
+  
+  // Si hay filtros activos, los aplicamos
+  if (Object.keys(backendFilters).length > 0) {
+    console.log("Aplicando filtros al backend:", backendFilters);
+    loadReservations(searchQuery.value, backendFilters);
   } else {
-    console.log("Reseteando filtro de tour_id a null, cargando todas las reservas");
-    // Pasar explícitamente tour_id: null para asegurarnos que se elimine el filtro
-    loadReservations(searchQuery.value, { tour_id: null });
+    console.log("Sin filtros activos, cargando todas las reservas");
+    // Pasamos un objeto vacío para asegurarnos que se eliminen todos los filtros
+    loadReservations(searchQuery.value, {});
   }
 }
 
-// Función para resetear todos los filtros
+// resetAllFilters con el objeto de filtros completo
 function resetAllFilters(): void {
   console.log("Reseteando todos los filtros");
-  filters.value = { tourId: null };
+  filters.value = { 
+    tourId: null, 
+    status: null 
+  };
   
   // Si tenemos una referencia al componente de filtros, usamos su método resetFilters
   if (filtersRef.value && 'resetFilters' in filtersRef.value) {
-    (filtersRef.value as any).resetFilters();
+    filtersRef.value.resetFilters();
   }
   
   // Cargamos las reservas sin filtros
-  loadReservations(searchQuery.value);
+  loadReservations(searchQuery.value, {});
 }
 
 // Eventos del ciclo de vida

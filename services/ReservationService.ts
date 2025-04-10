@@ -4,6 +4,7 @@ import type { ReservationPayload } from '@/types/ReservationTypes';
 
 interface ReservationFilters {
   tour_id?: number;
+  status?: string;
 }
 
 export async function fetchReservations(search?: string, filters?: ReservationFilters): Promise<ReservationPayload[]> {
@@ -22,9 +23,14 @@ export async function fetchReservations(search?: string, filters?: ReservationFi
     if (filters.tour_id) {
       params.tour_id = filters.tour_id;
     }
+    
+    if (filters.status) {
+      params.status = filters.status;
+    }
     // Aquí se pueden agregar más filtros en el futuro
   }
   
+  console.log("ReservationService - Enviando parámetros:", params);
   const response = await $axios.get('/reservations', { params });
   return response.data.reservations;
 }

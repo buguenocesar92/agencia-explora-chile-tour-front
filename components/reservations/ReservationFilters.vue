@@ -12,7 +12,17 @@
         />
       </div>
       
-      <!-- Otros filtros pueden agregarse aquí -->
+      <!-- Filtro por Estado de Pago -->
+      <div>
+        <FormSelect
+          id="statusFilter"
+          v-model="selectedStatus"
+          :options="statusOptions"
+          label="Estado de Pago"
+          placeholder="Todos los estados"
+          @update:model-value="onStatusSelected"
+        />
+      </div>
       
       <!-- Botón para limpiar filtros -->
       <div v-if="hasActiveFilters">
@@ -30,6 +40,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import TourFilterSelect from './TourFilterSelect.vue';
+import FormSelect from '@/components/FormSelect.vue';
 import type { TourTemplatePayload } from '@/types/TourTemplateTypes';
 
 // Props
@@ -37,10 +48,12 @@ const props = defineProps({
   modelValue: {
     type: Object as () => {
       tourId: number | null;
+      status: string | null;
       // Otros filtros se pueden agregar aquí
     },
     default: () => ({
       tourId: null,
+      status: null,
       // Valores default para otros filtros
     })
   }
@@ -52,11 +65,18 @@ const emit = defineEmits(['update:modelValue', 'filter-changed']);
 // Datos reactivos
 const selectedTourId = ref<number | null>(props.modelValue.tourId);
 const selectedTour = ref<TourTemplatePayload | null>(null);
+const selectedStatus = ref<string | null>(props.modelValue.status);
+
+// Opciones para el filtro de estado
+const statusOptions = ref([
+  { text: 'Pagado', value: 'paid' },
+  { text: 'No Pagado', value: 'not paid' }
+]);
 
 // Computed properties
 const hasActiveFilters = computed(() => {
-  return selectedTourId.value !== null && selectedTourId.value !== undefined;
-  // Añadir más condiciones aquí cuando se agreguen más filtros
+  return (selectedTourId.value !== null && selectedTourId.value !== undefined) || 
+         (selectedStatus.value !== null && selectedStatus.value !== undefined && selectedStatus.value !== '');
 });
 
 // Filtro cuando cambia el tour seleccionado
@@ -67,11 +87,19 @@ function onTourSelected(tour: TourTemplatePayload | null): void {
   updateFilters();
 }
 
+// Filtro cuando cambia el estado seleccionado
+function onStatusSelected(status: string | null): void {
+  console.log("Estado seleccionado:", status);
+  selectedStatus.value = status;
+  updateFilters();
+}
+
 // Actualiza los filtros y emite el evento
 function updateFilters(): void {
-  console.log("Actualizando filtros, tourId:", selectedTourId.value);
+  console.log("Actualizando filtros, tourId:", selectedTourId.value, "status:", selectedStatus.value);
   const filters = {
     tourId: selectedTourId.value,
+    status: selectedStatus.value,
     // Otros filtros se pueden agregar aquí
   };
   
@@ -84,6 +112,7 @@ function resetFilters(): void {
   console.log("Reseteando filtros");
   selectedTourId.value = null;
   selectedTour.value = null;
+  selectedStatus.value = null;
   updateFilters();
 }
 

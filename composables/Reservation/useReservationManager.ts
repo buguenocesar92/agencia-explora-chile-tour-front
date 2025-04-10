@@ -7,6 +7,7 @@ import type { ReservationPayload } from '@/types/ReservationTypes';
 
 interface ReservationFilters {
   tour_id?: number;
+  status?: string;
 }
 
 export function useReservationManager() {
@@ -24,17 +25,35 @@ export function useReservationManager() {
     if (filters) {
       console.log("useReservationManager - Actualizando filtros:", filters);
       
-      // Si tour_id es null o undefined, lo eliminamos del objeto de filtros
+      // Creamos una copia de los filtros actuales para manipularla
+      let newFilters = { ...currentFilters.value };
+      
+      // Manejamos el filtro de tour_id
       if (filters.tour_id === null || filters.tour_id === undefined) {
-        const { tour_id, ...restFilters } = { ...currentFilters.value };
-        currentFilters.value = restFilters; // Asignación directa para reemplazar el objeto
-        console.log("useReservationManager - Filtro tour_id eliminado, nuevos filtros:", currentFilters.value);
+        // Si tour_id es null, lo eliminamos del objeto
+        const { tour_id, ...restFilters } = newFilters;
+        newFilters = restFilters;
+        console.log("useReservationManager - Filtro tour_id eliminado");
       } else {
-        currentFilters.value = { ...currentFilters.value, ...filters };
+        // Si tour_id tiene valor, lo agregamos
+        newFilters.tour_id = filters.tour_id;
       }
+      
+      // Manejamos el filtro de status
+      if (filters.status === null || filters.status === undefined || filters.status === '') {
+        // Si status es null o vacío, lo eliminamos del objeto
+        const { status, ...restFilters } = newFilters;
+        newFilters = restFilters;
+        console.log("useReservationManager - Filtro status eliminado");
+      } else {
+        // Si status tiene valor, lo agregamos
+        newFilters.status = filters.status;
+      }
+      
+      // Asignamos los nuevos filtros
+      currentFilters.value = newFilters;
+      console.log("useReservationManager - Filtros finales aplicados:", currentFilters.value);
     }
-    
-    console.log("useReservationManager - Filtros finales aplicados:", currentFilters.value);
     
     try {
       reservations.value = await fetchReservations(search, currentFilters.value);
