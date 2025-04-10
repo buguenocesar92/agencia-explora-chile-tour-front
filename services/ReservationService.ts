@@ -5,6 +5,7 @@ import type { ReservationPayload } from '@/types/ReservationTypes';
 interface ReservationFilters {
   tour_id?: number;
   status?: string;
+  date?: string;
 }
 
 export async function fetchReservations(search?: string, filters?: ReservationFilters): Promise<ReservationPayload[]> {
@@ -26,6 +27,10 @@ export async function fetchReservations(search?: string, filters?: ReservationFi
     
     if (filters.status) {
       params.status = filters.status;
+    }
+    
+    if (filters.date) {
+      params.date = filters.date;
     }
     // Aquí se pueden agregar más filtros en el futuro
   }

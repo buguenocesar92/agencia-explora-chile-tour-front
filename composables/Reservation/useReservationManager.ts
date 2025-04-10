@@ -8,6 +8,7 @@ import type { ReservationPayload } from '@/types/ReservationTypes';
 interface ReservationFilters {
   tour_id?: number;
   status?: string;
+  date?: string;
 }
 
 export function useReservationManager() {
@@ -48,6 +49,17 @@ export function useReservationManager() {
       } else {
         // Si status tiene valor, lo agregamos
         newFilters.status = filters.status;
+      }
+      
+      // Manejamos el filtro de date
+      if (filters.date === null || filters.date === undefined || filters.date === '') {
+        // Si date es null o vacío, lo eliminamos del objeto
+        const { date, ...restFilters } = newFilters;
+        newFilters = restFilters;
+        console.log("useReservationManager - Filtro date eliminado");
+      } else {
+        // Si date tiene valor, lo agregamos
+        newFilters.date = filters.date;
       }
       
       // Asignamos los nuevos filtros

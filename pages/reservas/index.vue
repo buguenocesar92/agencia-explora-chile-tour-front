@@ -13,7 +13,7 @@
       <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
         <div class="flex flex-col md:flex-row gap-4 mb-4">
           <!-- Buscador por nombre o RUT -->
-          <div class="w-full md:w-1/3">
+          <div class="w-full md:w-1/4">
             <label class="block text-sm font-medium text-gray-700 mb-1">Buscar por nombre o RUT</label>
             <ReservationSearch 
               :model-value="searchQuery"
@@ -22,7 +22,7 @@
           </div>
           
           <!-- Filtro por Tour -->
-          <div class="w-full md:w-1/3">
+          <div class="w-full md:w-1/4">
             <TourFilterSelect
               v-model="filters.tourId"
               label="Filtrar por Tour"
@@ -32,7 +32,7 @@
           </div>
           
           <!-- Filtro por Estado de Pago -->
-          <div class="w-full md:w-1/3">
+          <div class="w-full md:w-1/4">
             <FormSelect
               id="statusFilter"
               v-model="filters.status"
@@ -41,6 +41,22 @@
               placeholder="Todos los estados"
               @update:model-value="onStatusSelected"
             />
+          </div>
+          
+          <!-- Filtro por Fecha -->
+          <div class="w-full md:w-1/4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Reserva</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="mdi mdi-calendar text-gray-400"></i>
+              </div>
+              <input
+                type="date"
+                v-model="filters.date"
+                @change="onDateSelected"
+                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+              />
+            </div>
           </div>
         </div>
         
@@ -137,6 +153,7 @@ interface Trip {
 interface Filters {
   tourId: number | null;
   status: string | null;
+  date: string | null;
   // Otros filtros en el futuro
 }
 
@@ -157,7 +174,8 @@ const filtersRef = ref<{
 const searchQuery = ref('');
 const filters = ref<Filters>({ 
   tourId: null,
-  status: null 
+  status: null,
+  date: null
 });
 
 // Extraemos la lógica del composable de reservas
@@ -172,7 +190,8 @@ const statusOptions = ref([
 // Computado para saber si hay filtros activos
 const hasActiveFilters = computed(() => {
   return (filters.value.tourId !== null && filters.value.tourId !== undefined) || 
-         (filters.value.status !== null && filters.value.status !== undefined && filters.value.status !== '');
+         (filters.value.status !== null && filters.value.status !== undefined && filters.value.status !== '') ||
+         (filters.value.date !== null && filters.value.date !== undefined && filters.value.date !== '');
 });
 
 // Manejar cambios en la búsqueda
@@ -189,6 +208,10 @@ function updateSearch(value: string): void {
   
   if (filters.value.status) {
     backendFilters.status = filters.value.status;
+  }
+  
+  if (filters.value.date) {
+    backendFilters.date = filters.value.date;
   }
   
   // Aplicamos la búsqueda con los filtros actuales
@@ -215,6 +238,12 @@ function applyFilters(newFilters: Filters): void {
     backendFilters.status = newFilters.status;
   }
   
+  // Filtro de fecha
+  if (newFilters.date !== null && newFilters.date !== undefined && newFilters.date !== '') {
+    console.log("Filtrando por date:", newFilters.date);
+    backendFilters.date = newFilters.date;
+  }
+  
   // Si hay filtros activos, los aplicamos
   if (Object.keys(backendFilters).length > 0) {
     console.log("Aplicando filtros al backend:", backendFilters);
@@ -231,7 +260,8 @@ function resetAllFilters(): void {
   console.log("Reseteando todos los filtros");
   filters.value = { 
     tourId: null, 
-    status: null 
+    status: null,
+    date: null
   };
   
   // Si tenemos una referencia al componente de filtros, usamos su método resetFilters
@@ -291,5 +321,14 @@ function onStatusSelected(status: string | null): void {
   console.log("Estado seleccionado:", status);
   filters.value.status = status;
   applyFilters(filters.value);
+}
+
+// Filtro cuando cambia la fecha seleccionada
+function onDateSelected(event: Event): void {
+  const target = event.target as HTMLInputElement;
+  if (target) {
+    filters.value.date = target.value;
+    applyFilters(filters.value);
+  }
 }
 </script>
