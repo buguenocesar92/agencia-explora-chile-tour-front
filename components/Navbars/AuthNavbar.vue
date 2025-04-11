@@ -2,7 +2,8 @@
   <nav
     :class="[
       'top-0 fixed z-50 w-full transition-all duration-300',
-      scrolled ? 'bg-white/90 backdrop-blur-md shadow-lg' : 'bg-transparent'
+      scrolled ? 'bg-white/90 backdrop-blur-md shadow-lg' : 'bg-transparent',
+      {'md:hidden': isAdminPage} // Ocultar en escritorio solo en páginas de admin
     ]"
   >
     <div class="container mx-auto px-6 py-3">
@@ -166,7 +167,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 // Prop para el background color (ya no lo usamos directamente)
 const props = defineProps({
@@ -176,8 +177,9 @@ const props = defineProps({
   }
 })
 
-// Usamos el router
+// Usamos el router y route
 const router = useRouter()
+const route = useRoute()
 
 // Usamos el store de autenticación
 const authStore = useAuthStore()
@@ -217,6 +219,15 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+})
+
+// Determinar si estamos en una página de administración
+const isAdminPage = computed(() => {
+  return route.path === '/dashboard' || 
+         route.path.startsWith('/reservas') || 
+         route.path.startsWith('/tours') || 
+         route.path.startsWith('/clientes') ||
+         route.path.startsWith('/viajes');
 })
 </script>
 

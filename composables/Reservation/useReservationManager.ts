@@ -17,6 +17,7 @@ export function useReservationManager() {
   const reservations = ref<ReservationPayload[]>([]);
   const isLoading = ref(false);
   const currentFilters = ref<ReservationFilters>({});
+  const error = ref<Error | null>(null);
   
 
   async function loadReservations(search = '', filters?: ReservationFilters) {
@@ -98,20 +99,26 @@ export function useReservationManager() {
     return loadReservations();
   }
 
-  async function updateReservationStatus(id: number, status: string) {
+  function updateReservationStatus(id: number, status: string) {
     isLoading.value = true;
-    try {
-      await updateReservationStatusService(id, status);
-      showSuccessNotification('Éxito', 'Reserva actualizada correctamente');
-      await loadReservations(); 
-    } catch (error) {
-      handleValidationError(error);
-      if (errorMessage.value) {
-        showErrorNotification('Error', errorMessage.value);
-      }
-    } finally {
-      isLoading.value = false;
-    }
+    error.value = null;
+
+    return updateReservationStatusService(id, status)
+      .then(() => {
+        // Mostrar notificación de éxito
+        showSuccessNotification('Éxito', 'Estado de reserva actualizado correctamente');
+        // Recargar las reservas
+        loadReservations();
+      })
+      .catch((err) => {
+        console.error('Error al actualizar estado:', err);
+        error.value = err;
+        // Mostrar notificación de error
+        showErrorNotification('Error', 'Error al actualizar el estado de la reserva');
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
   }
 
   async function handleDelete(id: number) {
