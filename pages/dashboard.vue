@@ -34,4 +34,8 @@ import AdminWrapper from '@/components/AdminWrapper.vue';
 
 const authStore = useAuthStore();
 const username = ref(authStore.name || 'Administrador');
+
+definePageMeta({
+  requiresAuth: true,
+});
 </script>
