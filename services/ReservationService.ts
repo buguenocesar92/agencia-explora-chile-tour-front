@@ -69,3 +69,31 @@ export async function deleteReservation(id: number): Promise<void> {
   const { $axios } = useNuxtApp();
   await $axios.delete(`/reservations/${id}`);
 }
+
+/**
+ * Exporta reservas a Excel y devuelve la URL para la descarga
+ */
+export async function exportReservationsToExcel(filters?: ReservationFilters): Promise<string> {
+  const { $axios } = useNuxtApp();
+  
+  // Construir los parámetros de consulta
+  const params: any = {};
+  
+  // Agregar filtros si existen
+  if (filters) {
+    if (filters.tour_id) {
+      params.tour_id = filters.tour_id;
+    }
+    
+    if (filters.status) {
+      params.status = filters.status;
+    }
+    
+    if (filters.date) {
+      params.date = filters.date;
+    }
+  }
+  
+  const response = await $axios.get('/reservations/export/excel', { params });
+  return response.data.url;
+}

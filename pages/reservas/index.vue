@@ -2,11 +2,21 @@
   <AdminWrapper>
     <div class="container mx-auto p-6">
       <!-- Encabezado con título -->
-      <div class="mb-6">
+      <div class="mb-6 flex justify-between items-center">
         <h1 class="text-2xl font-bold text-gray-800 flex items-center">
           <i class="mdi mdi-calendar-check text-blue-600 mr-2"></i>
           Gestión de Reservas
         </h1>
+        
+        <!-- Botón para exportar a Excel -->
+        <button 
+          @click="exportToExcel" 
+          class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center"
+          :disabled="isExporting"
+        >
+          <i class="mdi mdi-file-excel mr-2"></i>
+          {{ isExporting ? 'Exportando...' : 'Exportar a Excel' }}
+        </button>
       </div>
 
       <!-- Sección de filtros y búsqueda -->
@@ -119,6 +129,7 @@ import ClientModal from '@/components/reservations/modals/ClientModal.vue';
 import TripModal from '@/components/reservations/modals/TripModal.vue';
 import ReceiptModal from '@/components/reservations/modals/ReceiptModal.vue';
 import { useReservationManager } from '@/composables/Reservation/useReservationManager';
+import { exportReservationsToExcel } from '@/services/ReservationService';
 import type { ReservationPayload } from '@/types/ReservationTypes';
 import type { TourTemplatePayload } from '@/types/TourTemplateTypes';
 
@@ -329,6 +340,46 @@ function onDateSelected(event: Event): void {
   if (target) {
     filters.value.date = target.value;
     applyFilters(filters.value);
+  }
+}
+
+// Estado para exportar a Excel
+const isExporting = ref(false);
+
+// Función para exportar a Excel
+async function exportToExcel() {
+  try {
+    isExporting.value = true;
+    
+    // Preparamos los filtros para la exportación
+    const exportFilters: any = {};
+    
+    if (filters.value.tourId) {
+      exportFilters.tour_id = filters.value.tourId;
+    }
+    
+    if (filters.value.status) {
+      exportFilters.status = filters.value.status;
+    }
+    
+    if (filters.value.date) {
+      exportFilters.date = filters.value.date;
+    }
+    
+    // Llamar al servicio para exportar
+    const downloadUrl = await exportReservationsToExcel(exportFilters);
+    
+    // Crear un elemento <a> para descargar el archivo
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.click();
+  } catch (error) {
+    console.error('Error al exportar a Excel:', error);
+    alert('Error al exportar a Excel. Por favor intente nuevamente.');
+  } finally {
+    isExporting.value = false;
   }
 }
 </script>
