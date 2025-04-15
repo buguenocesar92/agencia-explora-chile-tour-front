@@ -18,7 +18,7 @@
       <div class="relative z-10 max-w-xl w-full px-4 sm:px-6 mx-auto text-center mt-8 mb-10 sm:mb-0">
         <div class="flex justify-center mb-4">
           <div class="bg-white/90 text-blue-600 rounded-lg px-4 py-2 text-sm font-bold inline-flex items-center">
-            <span class="mr-2">✓</span> Registrados en Sernatur
+            <span class="mr-2">✓</span> registrados en Sernatur N°36719
           </div>
         </div>
         <div class="flex justify-center mb-6">
@@ -26,17 +26,17 @@
             <img src="/logo.png" alt="Explora Chiletour" class="h-24 sm:h-32 md:h-44 mb-2" />
           </router-link>
         </div>
-        <h3 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-white/90">Tu mejor viaje comienza aquí</h3>
+        <h3 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-white/90">TU MEJOR VIAJE COMIENZA AQUÍ</h3>
         <p class="text-lg sm:text-xl text-white/90 mb-6 sm:mb-8">Viajes grupales por Chile y el mundo 🌎 • Giras de estudios • Experiencias inolvidables</p>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-10">
           <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-white">
             <span class="text-xl sm:text-2xl mb-1 sm:mb-2 block">🧭</span>
-            <span class="font-medium text-sm sm:text-base">Viajes grupales</span>
+            <span class="font-medium text-sm sm:text-base">Viajes adulto mayor</span>
           </div>
           <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-white">
             <span class="text-xl sm:text-2xl mb-1 sm:mb-2 block">✈️</span>
-            <span class="font-medium text-sm sm:text-base">Destinos internacionales</span>
+            <span class="font-medium text-sm sm:text-base">Destinos nacionales e internacionales.</span>
           </div>
           <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-white">
             <span class="text-xl sm:text-2xl mb-1 sm:mb-2 block">🎓</span>

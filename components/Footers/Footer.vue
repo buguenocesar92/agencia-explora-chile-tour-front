@@ -10,9 +10,9 @@
             </router-link>
           </h3>
           <div class="bg-blue-700/50 inline-block px-3 py-1 rounded-lg text-white text-sm font-medium mb-4">
-            Registrados en Sernatur
+            registrados en Sernatur N°36719
           </div>
-          <p class="text-gray-200 mb-4">Travel Company especializada en viajes grupales por Chile y el mundo. Ofrecemos experiencias inolvidables y giras de estudios personalizadas.</p>
+          <p class="text-gray-200 mb-4">Explora Chiletour especializada en viajes grupales por Chile y el mundo. Ofrecemos experiencias inolvidables y giras de estudios personalizadas.</p>
           <div class="flex space-x-4 mt-4">
             <a href="https://facebook.com/ExploraChiletour" target="_blank" class="text-gray-300 hover:text-white transition-colors">
               <v-icon>mdi-facebook</v-icon>
@@ -90,11 +90,11 @@
             </li>
             <li class="flex items-center">
               <v-icon class="mr-2 text-blue-300">mdi-phone</v-icon>
-              <span class="text-gray-200">+56 9 1234 5678</span>
+              <span class="text-gray-200">+56 9 6216 3788</span>
             </li>
             <li class="flex items-center">
               <v-icon class="mr-2 text-blue-300">mdi-email</v-icon>
-              <span class="text-gray-200">explorachiletour@gmail.com</span>
+              <span class="text-gray-200">Viajesexploratour@gmail.com</span>
             </li>
             <li class="flex items-center">
               <v-icon class="mr-2 text-blue-300">mdi-instagram</v-icon>
