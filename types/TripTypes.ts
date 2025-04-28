@@ -4,5 +4,7 @@ export interface TripPayload {
     tour_template_id: number;
     departure_date: string;
     return_date: string;
+    pdf_file?: File;
+    pdf_url?: string;
   }
   
