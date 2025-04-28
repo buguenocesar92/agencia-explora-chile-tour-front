@@ -53,4 +53,38 @@ export class TourService {
       return null;
     }
   }
+  
+  /**
+   * Obtiene la URL del PDF asociado a un tour
+   * @param tourId ID del tour
+   * @returns Promise con la URL del PDF
+   */
+  static async getTourPdf(tourId: string) {
+    try {
+      const { $axios } = useNuxtApp();
+      console.log(`Obteniendo PDF del tour ${tourId}...`);
+      const response = await $axios.get(`/tours/${tourId}/pdf`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener PDF del tour ${tourId}:`, error);
+      return null;
+    }
+  }
+  
+  /**
+   * Obtiene la URL del PDF asociado a una fecha específica de un tour
+   * @param dateId ID de la fecha
+   * @returns Promise con la URL del PDF
+   */
+  static async getTripDatePdf(dateId: string) {
+    try {
+      const { $axios } = useNuxtApp();
+      console.log(`Obteniendo PDF de la fecha ${dateId}...`);
+      const response = await $axios.get(`/trip-dates/${dateId}/pdf`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener PDF de la fecha ${dateId}:`, error);
+      return null;
+    }
+  }
 } 
