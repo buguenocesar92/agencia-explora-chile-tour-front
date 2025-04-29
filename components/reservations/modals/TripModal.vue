@@ -5,7 +5,26 @@
       <v-card-text>
         <!-- Vista previa del PDF -->
         <div v-if="programaUrl" class="pdf-preview">
-          <iframe :src="programaUrl" width="100%" height="450" frameborder="0"></iframe>
+          <!-- Mostrar PDF mediante iframe directo (igual que ReceiptModal) -->
+          <div class="pa-4">
+            <div class="d-flex justify-center mb-4">
+              <v-btn
+                color="primary"
+                :href="programaUrl"
+                target="_blank"
+              >
+                Ver programa completo
+              </v-btn>
+            </div>
+            
+            <iframe
+              :src="programaUrl"
+              width="100%"
+              height="450px"
+              frameborder="0"
+              style="border: 1px solid #ddd;"
+            ></iframe>
+          </div>
         </div>
         <div v-else class="text-center py-4">
           <em>Este viaje no tiene un programa asociado</em>
@@ -13,10 +32,6 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn v-if="programaUrl" color="primary" :href="programaUrl" target="_blank">
-          <v-icon class="mr-2">mdi-open-in-new</v-icon>
-          Ver Completo
-        </v-btn>
         <v-btn text @click="emit('update:modelValue', false)">Cerrar</v-btn>
       </v-card-actions>
     </v-card>
@@ -72,7 +87,10 @@ async function loadProgramaUrl() {
     
     // Obtener URL del archivo
     const response = await getProgramaFileUrl(props.trip.id);
-    programaUrl.value = response.file_url;
+    
+    if (response.file_url) {
+      programaUrl.value = response.file_url;
+    }
   } catch (error) {
     console.error('Error al cargar el archivo del programa:', error);
   }
@@ -81,9 +99,7 @@ async function loadProgramaUrl() {
 
 <style scoped>
 .pdf-preview {
-  border: 1px solid #ddd;
   border-radius: 4px;
   overflow: hidden;
-  height: 450px;
 }
 </style> 
