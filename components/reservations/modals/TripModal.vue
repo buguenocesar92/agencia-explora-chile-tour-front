@@ -1,23 +1,22 @@
 <template>
   <v-dialog :model-value="modelValue" @update:model-value="emit('update:modelValue', $event)" max-width="600px">
     <v-card>
-      <v-card-title>Detalles del Viaje</v-card-title>
-      <v-card-text v-if="trip">
-        <div><strong>ID de Viaje:</strong> {{ trip.id }}</div>
-        <div v-if="trip.departure_date"><strong>Fecha de Salida:</strong> {{ trip.departure_date }}</div>
-        <div v-if="trip.return_date"><strong>Fecha de Regreso:</strong> {{ trip.return_date }}</div>
-        <!-- Si la relación tour_template está cargada, mostrar detalles del tour -->
-        <div v-if="trip.tour_template">
-          <div><strong>Nombre del Tour:</strong> {{ trip.tour_template.name }}</div>
-          <div v-if="trip.tour_template.destination"><strong>Destino:</strong> {{ trip.tour_template.destination }}</div>
-          <div v-if="trip.tour_template.description"><strong>Descripción:</strong> {{ trip.tour_template.description }}</div>
+      <v-card-title>Programa del Viaje</v-card-title>
+      <v-card-text>
+        <!-- Vista previa del PDF -->
+        <div v-if="programaUrl" class="pdf-preview">
+          <iframe :src="programaUrl" width="100%" height="450" frameborder="0"></iframe>
         </div>
-        <div v-else>
-          <em>Detalles del tour no disponibles</em>
+        <div v-else class="text-center py-4">
+          <em>Este viaje no tiene un programa asociado</em>
         </div>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
+        <v-btn v-if="programaUrl" color="primary" :href="programaUrl" target="_blank">
+          <v-icon class="mr-2">mdi-open-in-new</v-icon>
+          Ver Completo
+        </v-btn>
         <v-btn text @click="emit('update:modelValue', false)">Cerrar</v-btn>
       </v-card-actions>
     </v-card>
@@ -25,24 +24,18 @@
 </template>
 
 <script setup lang="ts">
-// Define interfaces for trip data
-interface TourTemplate {
-  id?: number;
-  name?: string;
-  destination?: string | null;
-  description?: string | null;
-}
+import { ref, onMounted, watch } from 'vue';
+import { getProgramaFileUrl } from '@/services/TripService';
+import type { TripPayload, TourTemplate } from '@/types/TripTypes';
 
-interface Trip {
-  id?: number;
+// Redefinimos la interfaz Trip para usar dentro del componente
+interface Trip extends TripPayload {
+  // Propiedades adicionales específicas para este componente si las hay
   tour_id?: number | null;
   trip_date_id?: number | null;
-  departure_date?: string | null;
-  return_date?: string | null;
-  tour_template?: TourTemplate | null;
 }
 
-defineProps({
+const props = defineProps({
   modelValue: {
     type: Boolean,
     required: true
@@ -58,4 +51,39 @@ defineProps({
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
 }>();
-</script> 
+
+// Estado para la URL del PDF
+const programaUrl = ref<string | null>(null);
+
+// Cargar la URL del programa cuando se muestra el modal
+watch(() => props.modelValue, async (newVal) => {
+  if (newVal && props.trip && props.trip.id) {
+    await loadProgramaUrl();
+  }
+}, { immediate: true });
+
+// Cargar la URL del programa
+async function loadProgramaUrl() {
+  if (!props.trip || !props.trip.id) return;
+  
+  try {
+    // Resetear valores por si hay errores
+    programaUrl.value = null;
+    
+    // Obtener URL del archivo
+    const response = await getProgramaFileUrl(props.trip.id);
+    programaUrl.value = response.file_url;
+  } catch (error) {
+    console.error('Error al cargar el archivo del programa:', error);
+  }
+}
+</script>
+
+<style scoped>
+.pdf-preview {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 450px;
+}
+</style> 

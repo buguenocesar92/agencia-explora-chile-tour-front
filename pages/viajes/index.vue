@@ -40,8 +40,12 @@
         :loading="isLoading"
         class="elevation-1"
       >
-        <template #item.actions="{ item }">
+        <template #[`item.actions`]="{ item }">
           <div class="flex gap-2">
+            <v-btn color="info" @click="openTripDetails(item)" class="ma-2 mr-2">
+              <v-icon start>mdi-eye</v-icon>
+              Ver Detalles
+            </v-btn>
             <v-btn color="primary" @click="goToEdit(item.id)" class="ma-2 mr-2">
               <v-icon start>mdi-pencil</v-icon>
               Editar
@@ -59,6 +63,12 @@
           </div>
         </template>
       </v-data-table>
+
+      <!-- Modal para ver detalles del viaje -->
+      <TripModal
+        v-model="showTripModal"
+        :trip="selectedTrip"
+      />
     </div>
   </AdminWrapper>
 </template>
@@ -67,9 +77,11 @@
 import { ref, computed, onMounted } from 'vue';
 import AdminWrapper from '@/components/AdminWrapper.vue';
 import FormSelect from '@/components/FormSelect.vue';
+import TripModal from '@/components/reservations/modals/TripModal.vue';
 import { useTripManager } from '@/composables/useTripManager';
 import { fetchTourTemplates } from '@/services/TourTemplateService';
 import type { TourTemplatePayload } from '@/types/TourTemplateTypes';
+import type { TripPayload } from '@/types/TripTypes';
 
 definePageMeta({
   requiresAuth: true,
@@ -83,6 +95,16 @@ const { trips, isLoading, headers, handleDelete, goToCreate, goToEdit, loadTrips
 
 // Estado para el filtro de tour template
 const selectedTourTemplate = ref();
+
+// Estado para el modal de detalles del viaje
+const showTripModal = ref(false);
+const selectedTrip = ref<any>(null);
+
+// Función para abrir el modal con los detalles del viaje
+function openTripDetails(trip: any) {
+  selectedTrip.value = trip;
+  showTripModal.value = true;
+}
 
 // Cargar los tour templates para el select
 const tourTemplates = ref<TourTemplatePayload[]>([]);

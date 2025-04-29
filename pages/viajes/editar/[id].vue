@@ -62,6 +62,20 @@
           <div v-if="pdfFileName" class="mt-2 text-sm text-blue-600">
             Archivo actual: {{ pdfFileName }}
           </div>
+          
+          <!-- Vista previa del PDF actual -->
+          <div v-if="previewUrl" class="mt-4">
+            <div class="text-gray-700 font-semibold mb-2">Vista previa del programa:</div>
+            <div class="border border-gray-300 rounded overflow-hidden" style="height: 400px;">
+              <iframe :src="previewUrl" width="100%" height="100%" frameborder="0"></iframe>
+            </div>
+            <div class="mt-2 text-right">
+              <v-btn small color="primary" :href="previewUrl" target="_blank">
+                <v-icon class="mr-1">mdi-open-in-new</v-icon>
+                Ver Completo
+              </v-btn>
+            </div>
+          </div>
         </div>
         <button
           type="submit"
@@ -76,12 +90,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import AdminWrapper from '@/components/AdminWrapper.vue';
 import FormSelect from '@/components/FormSelect.vue';
 import { useTripForm } from '@/composables/Admin/useTripForm';
 import { fetchTourTemplates } from '@/services/TourTemplateService';
+import { getProgramaFileUrl } from '@/services/TripService';
 import type { TourTemplatePayload } from '@/types/TourTemplateTypes';
 
 definePageMeta({
@@ -93,6 +108,8 @@ const { trip, isEditing, isLoading, errors, handleSubmit, loadTrip } = useTripFo
 
 // Variable para almacenar el nombre del archivo PDF actual
 const pdfFileName = ref<string>('');
+// Variable para la URL de vista previa del PDF
+const previewUrl = ref<string | null>(null);
 
 // Función para manejar la carga del archivo PDF
 const handleFileUpload = (event: Event) => {
@@ -100,6 +117,12 @@ const handleFileUpload = (event: Event) => {
   if (target.files && target.files.length > 0) {
     trip.value.pdf_file = target.files[0];
     pdfFileName.value = target.files[0].name;
+    
+    // Crear una URL temporal para vista previa del archivo recién seleccionado
+    if (previewUrl.value && previewUrl.value.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl.value);
+    }
+    previewUrl.value = URL.createObjectURL(target.files[0]);
   }
 };
 
@@ -127,10 +150,28 @@ onMounted(async () => {
     // Si el viaje tiene un archivo PDF, mostrar su nombre
     if (trip.value.pdf_file && trip.value.pdf_file instanceof File) {
       pdfFileName.value = trip.value.pdf_file.name;
+      previewUrl.value = URL.createObjectURL(trip.value.pdf_file);
     } else if (trip.value.pdf_url) {
       // Si hay una URL del PDF, extraer el nombre del archivo
       pdfFileName.value = trip.value.pdf_url.split('/').pop() || 'archivo_pdf.pdf';
+      previewUrl.value = trip.value.pdf_url;
+    } else if (trip.value.programa) {
+      // Si tiene un programa guardado, intentar obtener la URL
+      try {
+        const response = await getProgramaFileUrl(tripId);
+        previewUrl.value = response.file_url;
+        pdfFileName.value = response.file_name || 'programa.pdf';
+      } catch (error) {
+        console.error('Error al cargar la vista previa del PDF:', error);
+      }
     }
+  }
+});
+
+// Liberar las URLs de objeto al desmontar el componente
+onBeforeUnmount(() => {
+  if (previewUrl.value && previewUrl.value.startsWith('blob:')) {
+    URL.revokeObjectURL(previewUrl.value);
   }
 });
 </script>

@@ -89,3 +89,20 @@ export async function deleteTrip(id: number): Promise<void> {
   const { $axios } = useNuxtApp();
   await $axios.delete(`/trips/${id}`);
 }
+
+/**
+ * Obtiene la URL del archivo PDF del programa de un viaje.
+ */
+export async function getProgramaFileUrl(id: number): Promise<{ file_url: string, file_name: string }> {
+  const { $axios } = useNuxtApp();
+  const response = await $axios.get(`/trips/${id}/programa`);
+  return response.data;
+}
+
+/**
+ * Obtiene la URL para descargar directamente el archivo PDF del programa.
+ */
+export function getProgramaDownloadUrl(id: number): string {
+  const { $axios } = useNuxtApp();
+  return $axios.defaults.baseURL + `/trips/${id}/programa/download`;
+}
