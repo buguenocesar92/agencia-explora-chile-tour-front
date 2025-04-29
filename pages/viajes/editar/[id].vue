@@ -67,7 +67,7 @@
           <div v-if="previewUrl" class="mt-4">
             <div class="text-gray-700 font-semibold mb-2">Vista previa del programa:</div>
             <div class="border border-gray-300 rounded overflow-hidden" style="height: 400px;">
-              <iframe :src="previewUrl" width="100%" height="100%" frameborder="0"></iframe>
+              <iframe :src="googleDocsViewerUrl" width="100%" height="100%" frameborder="0"></iframe>
             </div>
             <div class="mt-2 text-right">
               <v-btn small color="primary" :href="previewUrl" target="_blank">
@@ -110,6 +110,19 @@ const { trip, isEditing, isLoading, errors, handleSubmit, loadTrip } = useTripFo
 const pdfFileName = ref<string>('');
 // Variable para la URL de vista previa del PDF
 const previewUrl = ref<string | null>(null);
+
+// URL para Google Docs Viewer
+const googleDocsViewerUrl = computed(() => {
+  if (!previewUrl.value) return '';
+  
+  // Si es una URL de blob (archivo local), no podemos usar Google Docs Viewer
+  if (previewUrl.value.startsWith('blob:')) {
+    return previewUrl.value;
+  }
+  
+  // Para URLs remotas, usar Google Docs Viewer
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(previewUrl.value)}&embedded=true`;
+});
 
 // Función para manejar la carga del archivo PDF
 const handleFileUpload = (event: Event) => {

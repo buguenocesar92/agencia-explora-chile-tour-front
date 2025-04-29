@@ -23,9 +23,9 @@
           </v-btn>
         </div>
         
-        <!-- Iframe para mostrar el PDF, solo funciona si el servidor permite embedding -->
+        <!-- Usar Google Docs Viewer para mostrar el PDF -->
         <iframe
-          :src="imageUrl"
+          :src="googleDocsViewerUrl"
           width="100%"
           height="500px"
           class="mt-4"
@@ -78,6 +78,19 @@ const isImageUrl = computed(() => {
 
 const isPdfUrl = computed(() => {
   return props.imageUrl.toLowerCase().endsWith('.pdf');
+});
+
+// URL para Google Docs Viewer
+const googleDocsViewerUrl = computed(() => {
+  if (!isPdfUrl.value || !props.imageUrl) return '';
+  
+  // Si es una URL de blob (archivo local), no podemos usar Google Docs Viewer
+  if (props.imageUrl.startsWith('blob:')) {
+    return props.imageUrl;
+  }
+  
+  // Para URLs remotas, usar Google Docs Viewer
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(props.imageUrl)}&embedded=true`;
 });
 
 // Define emits with proper type definition

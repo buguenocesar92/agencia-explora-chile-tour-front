@@ -74,7 +74,7 @@
           </div>
           
           <!-- Iframe del PDF -->
-          <iframe v-else :src="pdfUrl" class="w-full h-96" title="Programa del viaje"></iframe>
+          <iframe v-else :src="googleDocsViewerUrl" class="w-full h-96" title="Programa del viaje"></iframe>
           
           <!-- Mensaje si no hay PDF disponible -->
           <div v-if="!pdfUrl && !loading.pdf" class="flex items-center justify-center bg-gray-100 h-96">
@@ -109,6 +109,19 @@ const selectedTripPdfUrl = ref<string>('');
 const pdfUrl = computed(() => {
   // Si hay una URL específica, usarla
   return selectedTripPdfUrl.value || '';
+});
+
+// URL para Google Docs Viewer
+const googleDocsViewerUrl = computed(() => {
+  if (!pdfUrl.value) return '';
+  
+  // Si es una URL de blob (archivo local), no podemos usar Google Docs Viewer
+  if (pdfUrl.value.startsWith('blob:')) {
+    return pdfUrl.value;
+  }
+  
+  // Para URLs remotas, usar Google Docs Viewer
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl.value)}&embedded=true`;
 });
 
 // Estado de carga para tours y fechas
