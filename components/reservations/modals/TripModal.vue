@@ -3,9 +3,21 @@
     <v-card>
       <v-card-title>Programa del Viaje</v-card-title>
       <v-card-text>
+        <!-- Estado de carga -->
+        <div v-if="loading" class="text-center py-4">
+          <v-progress-circular indeterminate color="primary"></v-progress-circular>
+          <p class="mt-2">Cargando programa...</p>
+        </div>
+        
+        <!-- Error al cargar el programa -->
+        <div v-else-if="error" class="text-center py-4 text-red-500">
+          <v-icon color="error" size="large">mdi-alert-circle</v-icon>
+          <p class="mt-2">{{ error }}</p>
+        </div>
+        
         <!-- Vista previa del PDF -->
-        <div v-if="programaUrl" class="pdf-preview">
-          <!-- Mostrar PDF mediante iframe directo (igual que ReceiptModal) -->
+        <div v-else-if="programaUrl" class="pdf-preview">
+          <!-- Mostrar PDF mediante Google Docs Viewer -->
           <div class="pa-4">
             <div class="d-flex justify-center mb-4">
               <v-btn
@@ -18,7 +30,7 @@
             </div>
             
             <iframe
-              :src="programaUrl"
+              :src="googleDocsViewerUrl"
               width="100%"
               height="450px"
               frameborder="0"
@@ -39,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { getProgramaFileUrl } from '@/services/TripService';
 import type { TripPayload, TourTemplate } from '@/types/TripTypes';
 
@@ -67,8 +79,25 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
 }>();
 
+// Estados para controlar la carga y los errores
+const loading = ref(false);
+const error = ref<string | null>(null);
+
 // Estado para la URL del PDF
 const programaUrl = ref<string | null>(null);
+
+// URL para Google Docs Viewer
+const googleDocsViewerUrl = computed(() => {
+  if (!programaUrl.value) return '';
+  
+  // Si es una URL de blob (archivo local), no podemos usar Google Docs Viewer
+  if (programaUrl.value.startsWith('blob:')) {
+    return programaUrl.value;
+  }
+  
+  // Para URLs remotas, usar Google Docs Viewer
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(programaUrl.value)}&embedded=true`;
+});
 
 // Cargar la URL del programa cuando se muestra el modal
 watch(() => props.modelValue, async (newVal) => {
@@ -81,18 +110,31 @@ watch(() => props.modelValue, async (newVal) => {
 async function loadProgramaUrl() {
   if (!props.trip || !props.trip.id) return;
   
+  loading.value = true;
+  error.value = null;
+  programaUrl.value = null;
+  
   try {
-    // Resetear valores por si hay errores
-    programaUrl.value = null;
+    console.log("Cargando programa para el viaje ID:", props.trip.id);
     
     // Obtener URL del archivo
     const response = await getProgramaFileUrl(props.trip.id);
     
-    if (response.file_url) {
+    if (response && response.file_url) {
       programaUrl.value = response.file_url;
+      console.log("URL del programa obtenida:", programaUrl.value);
+    } else {
+      console.warn("No se encontró URL del programa para este viaje");
     }
-  } catch (error) {
-    console.error('Error al cargar el archivo del programa:', error);
+  } catch (err: any) {
+    console.error('Error al cargar el archivo del programa:', err);
+    error.value = "No se pudo cargar el programa del viaje.";
+    
+    if (err.response && err.response.status === 404) {
+      error.value = "El programa de este viaje no está disponible.";
+    }
+  } finally {
+    loading.value = false;
   }
 }
 </script>
